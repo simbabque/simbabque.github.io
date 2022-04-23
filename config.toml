@@ -10,13 +10,20 @@ summaryLength = 30
 enableEmoji = true
 pygmentsCodeFences = true
 
+[markup.goldmark.renderer]
+    unsafe= true
+
+[markup.highlight]
+    style = 'emacs'
+    lineNos = true
+
 [params]
-    tagline = "A blog about Perl, and making more developers"
+    tagline = "A blog about Perl, coding, and making more developers"
     description = "A blog about the Perl programming language, training, and managing developers"
     # site_logo = "/4ZPmj.png"
     #images = [""] #This is used for opengraph/twitter cards.
-    customCSS = []  #Optional Customised CSS
-    #favicon = ""
+    customCSS = [ "custom.css" ]  #Optional Customised CSS
+    favicon = "favicon.png"
     #utterancesRepo = "username/repository"
     #utterancesIssueTerm = "pathname"
     #homepageLength = 10
