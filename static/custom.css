@@ -5,3 +5,7 @@
     background-repeat: no-repeat;
     background-position: top left;
 }
+
+ul#social-media a {
+    text-decoration: none;
+}
