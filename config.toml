@@ -1,4 +1,4 @@
-baseURL = "/"
+baseURL = "https://simbabque.github.io"
 languageCode = "en-gb"
 title = "Julien's tech(ish) blog"
 theme = "hugo-kiera"
