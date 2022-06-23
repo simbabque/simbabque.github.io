@@ -1,0 +1,257 @@
+<!doctype html><html lang=en-gb><head><title>Installing Perl dependencies based on your Perl version in Github Actions - Julien's tech(ish) blog</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="A blog about the Perl programming language, training, and managing developers"><meta name=author content="Julien Fiegehenn"><meta property="og:title" content="Installing Perl dependencies based on your Perl version in Github Actions"><meta property="og:description" content="Github Actions are great for running tests, especially to check if pull requests are breaking your build. You can easily set up jobs for different operating systems and Perl version using the excellent tooling already available for Perl."><meta property="og:type" content="article"><meta property="og:url" content="https://simbabque.github.io/posts/install-perl-version-depedencies-github-workflow/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-06-23T15:00:00+01:00"><meta property="article:modified_time" content="2022-06-23T15:00:00+01:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Installing Perl dependencies based on your Perl version in Github Actions"><meta name=twitter:description content="Github Actions are great for running tests, especially to check if pull requests are breaking your build. You can easily set up jobs for different operating systems and Perl version using the excellent tooling already available for Perl."><meta name=generator content="Hugo 0.101.0"><link rel="shortcut icon" href=https://simbabque.github.io/favicon.png><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin=anonymous><link rel=stylesheet href=https://simbabque.github.io/fontawesome/css/all.min.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"><link rel=stylesheet type=text/css href=https://simbabque.github.io/css/styles.css><link rel=stylesheet href=https://simbabque.github.io/custom.css><link rel=stylesheet href=https://simbabque.github.io/devicons/style.css></head><body><div id=container><header><h1><a href=https://simbabque.github.io/>Julien&rsquo;s tech(ish) blog</a></h1><ul id=social-media><li><a href=https://github.com/simbabque title=GitHub><i class="fab fa-github fa-lg"></i></a></li><li><a href=https://twitter.com/simbabque title=Twitter><i class="fab fa-twitter fa-lg"></i></a></li><li><a href=https://stackoverflow.com/users/1331451/simbabque title=StackOverflow><i class="fab fa-stack-overflow fa-lg"></i></a></li><li><a href=https://metacpan.org/author/SIMBABQUE title=metacpan><i class="devicons-perl fa-lg"></i></a></li></ul><p><em>A blog about Perl, coding, and making more developers</em></p></header><nav><ul><li><a href=https://simbabque.github.io/categories><i class="fa-li fa fa-lg"></i><span>Categories</span></a></li><li><a href=https://simbabque.github.io/tags><i class="fa-li fa fa-lg"></i><span>Tags</span></a></li><li><a class=active href=https://simbabque.github.io/posts/><i class="fa-li fa fa-lg"></i><span>Posts</span></a></li><li><a href=https://simbabque.github.io/talks/><i class="fa-li fa fa-lg"></i><span>Talks</span></a></li></ul></nav><main><article><h1>Installing Perl dependencies based on your Perl version in Github Actions</h1><aside><ul><li><time class=post-date datetime=2022-06-23T15:00:00+01:00>Jun 23, 2022</time></li><li>Categories:
+<em><a href=https://simbabque.github.io/categories/coding>coding</a></em></li><li>7 minute read</li></ul></aside><div class=featured_image><a href=https://simbabque.github.io/posts/install-perl-version-depedencies-github-workflow/ title="Installing Perl dependencies based on your Perl version in Github Actions"><img src></a></div><p><a href=https://github.com/features/actions>Github Actions</a> are great for running tests, especially to check if pull requests are breaking your build. You can easily
+set up jobs for different operating systems and Perl version using the excellent tooling already available for Perl. I will
+link some of these in the course of this post.</p><p>At work I ran into an issue where I had to temporarily overwrite the value behind an accessor in a Catalyst Context object (<code>$c</code>).
+Think <code>local $foo->{bar}</code>, but for <code>$foo->bar</code>. There is no built-in way of doing that, so I made a module that is now on CPAN.
+It&rsquo;s called <a href=https://metacpan.org/pod/MooseX::LocalAttribute>MooseX::LocalAttribute</a>, but it works with all kinds of Perl objects, not just with Moose.</p><p>I included tests for all the object creation modules I could think of off the top of my head. There are quite a lot. While I think
+that there are probably not many people who use <a href=https://metacpan.org/pod/Mo>Mo</a> in production, <a href=https://metacpan.org/pod/Moose>Moose</a>
+and <a href=https://metacpan.org/pod/Moo>Moo</a> are of course much more prevalent.</p><p>But there is another one that&rsquo;s quite popular now to help quickly make objects: <a href=https://metacpan.org/pod/Mojolicious>Mojolicious</a>.
+It includes <a href=https://metacpan.org/pod/Mojo::Base>Mojo::Base</a>, which gives you
+a very simple version of <code>has</code>. Internally it&rsquo;s also just a blessed hash reference with accessors, just like a Moo object. So of course
+I wanted to support it.</p><p>That decision made me run into a problem with my test suite, which is basically the same set of test run for every type of object creation
+module that is installed. And of course my Github Action should run all of them, on as many Perl versions as possible. But the folks at Mojolicious
+are very forward-thinking. At the time of writing, the lowest supported Perl version for Mojolicious is 5.16. But I want my module to work on
+Perl 5.08, as it doesn&rsquo;t do anything modern at all. And Mojolicious is just a testing dependency for me. I am using <a href=https://metacpan.org/pod/Test::Requires>Test::Requires</a>,
+so if one of the modules I want to test against is not installed, that test file simply skips.</p><p>A modern Perl module distribution typicall defines its dependencies in a <a href=https://metacpan.org/dist/Module-CPANfile/view/lib/cpanfile.pod>cpanfile</a>.
+In my case, this <a href=https://metacpan.org/pod/Dist::Zilla::Plugin::Prereqs::FromCPANfile>gets picked up by Dist::Zilla and turned into the META.json file</a>.
+You can specify different phases such as <code>develop</code>, <code>test</code>, <code>build</code> and <code>runtime</code>, as well as how badly
+your module needs a particular module. The default is <code>requires</code>, which means you have to have it, but it can also <code>recommends</code> or <code>suggests</code> things
+that you might want to install. More details on this can be found in (CPAN::Meta::Spec)[https://metacpan.org/pod/CPAN::Meta::Spec#Prereq-Spec].</p><p>I started out listing all of the things I could test against as <code>recommends</code>. My cpanfile looked like this.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span>on <span style=color:#b44>&#39;runtime&#39;</span> <span style=color:#666>=&gt;</span> <span style=color:#a2f;font-weight:700>sub</span> {
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;perl&#39;</span> <span style=color:#666>=&gt;</span> <span style=color:#b44>&#39;5.008&#39;</span>;
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;Exporter&#39;</span>;
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;Scope::Guard&#39;</span>;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>on <span style=color:#b44>&#39;test&#39;</span> <span style=color:#666>=&gt;</span> <span style=color:#a2f;font-weight:700>sub</span> {
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;FindBin&#39;</span>;
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;Test::Exception&#39;</span>;
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;Test::More&#39;</span>;
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;Test::Requires&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Moose&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Moo&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Mo&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Mouse&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Class::Accessor&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Mojolicious&#39;</span>;
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></td></tr></table></div></div><p>And in my Github Action definition file, which is written in YAML and lives in the <code>.github/workflows</code> folder, I had a matrix of different Perl versions
+set up for each operating system. That makes three different jobs with a list of Perl versions to test against, resulting in a lot of jobs that would
+get run whenever a new commit or PR gets pushed. Here&rsquo;s a simplified extract of it, showing most of the test job for Ubuntu. There are two more similar
+ones for Mac and Windows.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ubuntu-test-job</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>needs</span>:<span style=color:#bbb> </span>build-job<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>runs-on</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;ubuntu-20.04&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>strategy</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>fail-fast</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span><span style=color:green;font-weight:700>matrix</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>os</span>:<span style=color:#bbb> </span>[ubuntu-20.04]<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>perl-version</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- <span style=color:#b44>&#34;5.8&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- <span style=color:#b44>&#34;5.10&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- <span style=color:#b44>&#34;5.12&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:#080;font-style:italic># ...</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- <span style=color:#b44>&#34;5.32&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- <span style=color:#b44>&#34;5.34&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span>- <span style=color:#b44>&#34;5.36&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>perl ${{ matrix.perl-version }} on ${{ matrix.os }}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>steps</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>set up perl<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>shogo82148/actions-setup-perl@v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>perl-version</span>:<span style=color:#bbb> </span>${{ matrix.perl-version }}<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>actions/download-artifact@v2<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>build_dir<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>path</span>:<span style=color:#bbb> </span>.<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>install deps using cpm<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>perl-actions/install-with-cpm@v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>cpanfile</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;cpanfile&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;--with-suggests --with-recommends --with-test&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>prove -lr t<span style=color:#bbb>
+</span></span></span></code></pre></td></tr></table></div></div><p>I want the tests to run on all stable Perl releases starting at Perl 5.8, and all the way through to the current one, which is 5.36 at
+the time of writing. The job depends on another job that has already run, which built a release. It downloads that release, unpacks it,
+and then installs dependencies using <a href=https://metacpan.org/dist/App-cpm/view/script/cpm><code>cpm</code></a> via
+<a href=https://github.com/marketplace/actions/install-with-cpm>this handy action</a>, including all of the suggested and recommended modules.</p><p>And that is where the problem arises. Mojolicious cannot be installed on Perls lower than 5.16, so the job called <em>install deps using cpm</em>
+fails, which means that whole run goes red.</p><p>But I still want to be able to test against all of the other modules on Perls 5.8, 5.10, 5.12 and 5.14. My test suite allows that. If
+it cannot load Mojolicious, it&rsquo;ll just skip that test. So I needed to find a way to not install Mojolicious on these versions. But I didn&rsquo;t
+want to list it explicitly in the workflow file. It should still get the dependencies dynamically from the cpanfile, and of course that
+must not mess with a user installing my module.</p><p>The solution seems fairly obvious once I had found it. It&rsquo;s possible to make individual steps of a job only execute
+<a href=https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idif><code>if</code> a condition is met</a>. You can do
+something like this:</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=display:flex><span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>install deps using cpm<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>if</span>:<span style=color:#bbb> </span>matrix.perl-version == 5.14<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>perl-actions/install-with-cpm@v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpanfile</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;cpanfile&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;--with-suggests --with-recommends --with-test&#34;</span><span style=color:#bbb>
+</span></span></span></code></pre></td></tr></table></div></div><p>But we also need a way to have Mojolicious be recognised as a special case. I did that by changing it from <code>recommends</code> to <code>suggests</code> in
+my cpanfile, which make it less required. Most people will not install these soft requirements anyway, and especially not for test, so we
+can safely do that.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span>on <span style=color:#b44>&#39;test&#39;</span> <span style=color:#666>=&gt;</span> <span style=color:#a2f;font-weight:700>sub</span> {
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;FindBin&#39;</span>;
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;Test::Exception&#39;</span>;
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;Test::More&#39;</span>;
+</span></span><span style=display:flex><span>    requires <span style=color:#b44>&#39;Test::Requires&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Moose&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Moo&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Mo&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Mouse&#39;</span>;
+</span></span><span style=display:flex><span>    recommends <span style=color:#b44>&#39;Class::Accessor&#39;</span>;
+</span></span><span style=display:flex><span>    suggest <span style=color:#b44>&#39;Mojolicious&#39;</span>;
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></td></tr></table></div></div><p>We can also tell <code>cpm</code> that we explicitly want to not install a particular type of dependency.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=display:flex><span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;--without-suggests --with-recommends --with-test&#34;</span><span style=color:#bbb>
+</span></span></span></code></pre></td></tr></table></div></div><p>So now we need to tie this together. We can set up two different steps in the workflow, and only one will be executed.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=display:flex><span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>install deps using cpm - with Mojolicious<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>if</span>:<span style=color:#bbb> </span>matrix.perl-version &gt;= &#34;5.16&#34;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>perl-actions/install-with-cpm@v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpanfile</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;cpanfile&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;--without-suggests --with-recommends --with-test&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>install deps using cpm - without Mojolicious<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>if</span>:<span style=color:#bbb> </span>matrix.perl-version &lt; &#34;5.16&#34;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>perl-actions/install-with-cpm@v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpanfile</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;cpanfile&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;--with-suggests --with-recommends --with-test&#34;</span><span style=color:#bbb>
+</span></span></span></code></pre></td></tr></table></div></div><p>This looks great. But it doesn&rsquo;t work. <a href=https://github.com/marketplace/actions/setup-perl-environment>The action we are using to set up Perl</a>
+needs the version numbers to be actual numbers, so <code>5.8</code> is bigger than <code>5.10</code> and <code>5.36</code>. That&rsquo;s a problem,
+because it will still install it for Perl 5.8, and that run will fail. So let&rsquo;s be more specific.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=display:flex><span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>install deps using cpm - with Mojolicious<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>if</span>:<span style=color:#bbb> </span>matrix.perl-version &gt;= &#34;5.16&#34; &amp;&amp; matrix.perl-version != &#34;5.8&#34;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>perl-actions/install-with-cpm@v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpanfile</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;cpanfile&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;--without-suggests --with-recommends --with-test&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>install deps using cpm - without Mojolicious<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>if</span>:<span style=color:#bbb> </span>matrix.perl-version &lt; &#34;5.16&#34; || matrix.perl-version == &#34;5.8&#34;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>perl-actions/install-with-cpm@v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpanfile</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;cpanfile&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;--with-suggests --with-recommends --with-test&#34;</span><span style=color:#bbb>
+</span></span></span></code></pre></td></tr></table></div></div><p>This works. It&rsquo;s great, but if Mojolicious bump their Perl dependency to 5.18, we&rsquo;ll have to change this six times (twice for each OS). Can we make
+it more dynamic?</p><p>We can set an environment variable in the workflow at the very top. It will be available as <code>env.MOJO_REQUIRED_VERSION</code> in all of the jobs.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=display:flex><span><span style=color:green;font-weight:700>env</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>MOJO_REQUIRED_VERSION</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;5.16&#34;</span><span style=color:#bbb> </span><span style=color:#080;font-style:italic># Bump this if Mojolicious increases their minimum Perl version</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:green;font-weight:700>jobs</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># ...</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>ubuntu-test-job</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># ...</span><span style=color:#bbb>
+</span></span></span></code></pre></td></tr></table></div></div><p>Now we can refer to this variable throughout the jobs. This will repeat several times in the workflow file.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=display:flex><span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>install deps using cpm - with Mojolicious<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>if</span>:<span style=color:#bbb> </span>matrix.perl-version &gt;= env.MOJO_REQUIRED_VERSION &amp;&amp; matrix.perl-version != &#39;5.8&#39;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>perl-actions/install-with-cpm@v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpanfile</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;cpanfile&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;--with-suggests --with-recommends --with-test&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>install deps using cpm - without Mojolicious<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>if</span>:<span style=color:#bbb> </span>matrix.perl-version &lt; env.MOJO_REQUIRED_VERSION || matrix.perl-version == &#39;5.8&#39;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>perl-actions/install-with-cpm@v1<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>cpanfile</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;cpanfile&#34;</span><span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>args</span>:<span style=color:#bbb> </span><span style=color:#b44>&#34;--without-suggests --with-recommends --with-test&#34;</span><span style=color:#bbb>
+</span></span></span></code></pre></td></tr></table></div></div><p>In conclusion, while YAML development isn&rsquo;t going to be my favourite next role, I can still apply some programming paradigms to these config files.</p></article><section class=post-nav><ul><li><a href=https://simbabque.github.io/posts/weekly-challenge-166-github-copilot/><i class="fa fa-chevron-circle-left"></i> The Weekly Challenge 166: Github DWIM</a></li><li></li></ul></section></main><footer><ul><li><h6>Rendered by <a href=https://gohugo.io title=Hugo>Hugo</a> |
+<a href=https://simbabque.github.io/index.xml>Subscribe</a></h6></li></ul></footer></div><script src=https://simbabque.github.io/js/scripts.js></script></body></html>
