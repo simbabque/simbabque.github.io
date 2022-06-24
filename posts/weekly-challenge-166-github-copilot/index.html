@@ -1,330 +1,330 @@
 <!doctype html><html lang=en-gb><head><title>The Weekly Challenge 166: Github DWIM - Julien's tech(ish) blog</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="A blog about the Perl programming language, training, and managing developers"><meta name=author content="Julien Fiegehenn"><meta property="og:title" content="The Weekly Challenge 166: Github DWIM"><meta property="og:description" content="I recently got an account for Github Copilot. So let&rsquo;s go and have some fun with it.
 I have used it to write my entries for the Weekly Challenge 166. I am going to look at task 2 in this blog post."><meta property="og:type" content="article"><meta property="og:url" content="https://simbabque.github.io/posts/weekly-challenge-166-github-copilot/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-05-29T20:00:00+01:00"><meta property="article:modified_time" content="2022-05-29T20:00:00+01:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="The Weekly Challenge 166: Github DWIM"><meta name=twitter:description content="I recently got an account for Github Copilot. So let&rsquo;s go and have some fun with it.
-I have used it to write my entries for the Weekly Challenge 166. I am going to look at task 2 in this blog post."><meta name=generator content="Hugo 0.101.0"><link rel="shortcut icon" href=https://simbabque.github.io/favicon.png><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin=anonymous><link rel=stylesheet href=https://simbabque.github.io/fontawesome/css/all.min.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"><link rel=stylesheet type=text/css href=https://simbabque.github.io/css/styles.css><link rel=stylesheet href=https://simbabque.github.io/custom.css><link rel=stylesheet href=https://simbabque.github.io/devicons/style.css></head><body><div id=container><header><h1><a href=https://simbabque.github.io/>Julien&rsquo;s tech(ish) blog</a></h1><ul id=social-media><li><a href=https://github.com/simbabque title=GitHub><i class="fab fa-github fa-lg"></i></a></li><li><a href=https://twitter.com/simbabque title=Twitter><i class="fab fa-twitter fa-lg"></i></a></li><li><a href=https://stackoverflow.com/users/1331451/simbabque title=StackOverflow><i class="fab fa-stack-overflow fa-lg"></i></a></li><li><a href=https://metacpan.org/author/SIMBABQUE title=metacpan><i class="devicons-perl fa-lg"></i></a></li></ul><p><em>A blog about Perl, coding, and making more developers</em></p></header><nav><ul><li><a href=https://simbabque.github.io/categories><i class="fa-li fa fa-lg"></i><span>Categories</span></a></li><li><a href=https://simbabque.github.io/tags><i class="fa-li fa fa-lg"></i><span>Tags</span></a></li><li><a class=active href=https://simbabque.github.io/posts/><i class="fa-li fa fa-lg"></i><span>Posts</span></a></li><li><a href=https://simbabque.github.io/talks/><i class="fa-li fa fa-lg"></i><span>Talks</span></a></li></ul></nav><main><article><h1>The Weekly Challenge 166: Github DWIM</h1><aside><ul><li><time class=post-date datetime=2022-05-29T20:00:00+01:00>May 29, 2022</time></li><li>Categories:
-<em><a href=https://simbabque.github.io/categories/coding>coding</a></em></li><li>14 minute read</li></ul></aside><div class=featured_image><a href=https://simbabque.github.io/posts/weekly-challenge-166-github-copilot/ title="The Weekly Challenge 166: Github DWIM"><img src></a></div><p>I recently got an account for <a href=https://copilot.github.com/>Github Copilot</a>. So let&rsquo;s go and have some fun with it.</p><p>I have used it to write my entries for the <a href=https://theweeklychallenge.org/blog/perl-weekly-challenge-166/>Weekly Challenge 166</a>. I am going to look at task 2 in this blog post. In a gist, you&rsquo;re asked to print a table diff view of files in three directories. It turns out that properly describing the task is actually quite hard.</p><p>I&rsquo;m doing this in <a href=https://code.visualstudio.com/>Visual Studio Code</a>, with the Copilot extension. It prettty much just suggests code and you can accept it, or ask for something else.</p><p><img src=hello-world.gif alt="Hello World in Perl"></p><p>Obviously the first thing I tried was to dump in the whole task description and hope for the best. Of course that did not work.</p><p>Let&rsquo;s talk about assumptions for a second. I didn&rsquo;t think getting the actual task done with Copilot would work. I did not even think it would produce sensible Perl code at all.</p><p>I tried to approach this as naively as possible. I didn&rsquo;t think about the algorithm at all beforehand. I wanted to know how &ldquo;smart&rdquo; this thing really is. Can it replace us?</p><p>As I am recreating this for the blog post, I will end up with slightly different code as the one I&rsquo;ve submitted as my entry. I think for this experiment that&rsquo;s OK.</p><p>I&rsquo;m going to use screen captures of Visual Studio Code where Copilot suggests stuff because that is much easier than writing down what I did and what it did.</p><h2 id=creating-the-directory-structure>Creating the directory structure</h2><p>Before we can begin, we need these three directories and the files. I asked it to make the first one for me. That went reasonably well.</p><p><img src=create-files.gif alt="Creating the first directory"></p><p>This is cute, but not exactly what we need. Instead, I tried to be more explicit, and got this solution, which I&rsquo;ve reindented to fit the blog post.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#080;font-style:italic># iterate over these files and directories:</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># Arial.ttf  Comic_Sans.ttf  Georgia.ttf  </span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># Helvetica.ttf  Impact.otf  Verdana.ttf  Old_Fonts/</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># create them in the temporary directory</span>
-</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>for</span> <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$file</span> (<span style=color:green>qw(
-</span></span></span><span style=display:flex><span><span style=color:green>    Arial.ttf Comic_Sans.ttf Georgia.ttf 
-</span></span></span><span style=display:flex><span><span style=color:green>    Helvetica.ttf Impact.otf Verdana.ttf
-</span></span></span><span style=display:flex><span><span style=color:green>)</span>) {
-</span></span><span style=display:flex><span>    <span style=color:#b8860b>$dir_a</span><span style=color:#666>-&gt;</span>child(<span style=color:#b8860b>$file</span>)<span style=color:#666>-&gt;</span>touchpath;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><p>As we can see, <code>Old_Fonts/</code> is missing. But it&rsquo;s smart enough to help us with that. We just have to ask.</p><p><img src=create-files-there-it-is.gif alt="Adding an empty line actually makes the missing folder show up"></p><p>Now all we need to do is repeat this two more times. This is now much easier. It seems to be quite context-aware.</p><p><img src=create-files-b.gif alt="Creating directory b is much faster"></p><p>To make <code>dir_c</code> we do the same thing, and it just appears.</p><p>Finally, we don&rsquo;t want to keep these directories around after we&rsquo;re done. So we need to delete them. Let&rsquo;s ask Copilot to do that for us.</p><p><img src=cleanup.gif alt="Deleting the directories"></p><h2 id=find-the-missing-files>Find the missing files</h2><p>This seemed easy. Too easy. Surely it cannot just write the code for us, can it? Let&rsquo;s find out. We&rsquo;re going to give it the brief from the challenge.</p><p>As a reminder, I&rsquo;m recreating this for the blog post. I don&rsquo;t know if Copilot remembers my first attempt. I&rsquo;m doing this in a different directory, different git repository and different VS Code window. The code it produces is not what I got before.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#080;font-style:italic># Given a few (three or more) directories (non-recursively), </span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># display a side-by-side difference of files that are </span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># missing from at least one of the directories. Do not </span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># display files that exist in every directory.</span>
-</span></span></code></pre></td></tr></table></div></div><p>At this point, it doesn&rsquo;t suggest anything. So let&rsquo;s help it a little.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#a2f;font-weight:700>sub</span> <span style=color:#00a000>find_missing_files</span> {
-</span></span></code></pre></td></tr></table></div></div><p>The first suggestion it comes up with is this code.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#a2f;font-weight:700>sub</span> <span style=color:#00a000>find_missing_files</span> {
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>@dirs</span> <span style=color:#666>=</span> <span style=color:#b8860b>@_</span>;
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>@files</span>;
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>for</span> <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$dir</span> (<span style=color:#b8860b>@dirs</span>) {
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$dir_path</span> <span style=color:#666>=</span> path(<span style=color:#b8860b>$dir</span>);
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>@dir_files</span> <span style=color:#666>=</span> <span style=color:#b8860b>$dir_path</span><span style=color:#666>-&gt;</span>children;
-</span></span><span style=display:flex><span>        <span style=color:#a2f>push</span> <span style=color:#b8860b>@files</span>, <span style=color:#b8860b>@dir_files</span>;
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>%files</span> <span style=color:#666>=</span> <span style=color:#a2f>map</span> { <span style=color:#b8860b>$_</span><span style=color:#666>-&gt;</span>basename <span style=color:#666>=&gt;</span> <span style=color:#666>1</span> } <span style=color:#b8860b>@files</span>;
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>@missing_files</span> <span style=color:#666>=</span> <span style=color:#a2f>grep</span> { <span style=color:#666>!</span><span style=color:#b8860b>$files</span>{<span style=color:#b8860b>$_</span>} } <span style=color:#a2f>keys</span> <span style=color:#b8860b>%files</span>;
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>return</span> <span style=color:#b8860b>@missing_files</span>;
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><p>It doesn&rsquo;t seem to know that we already have <a href=https://metacpan.org/pod/Path::Tiny>Path::Tiny</a> objects. To be fair, that&rsquo;s probably OK. There&rsquo;s an <code>@files</code> that exists outside of the directory loop. It sticks all files for each directory in to that array, and then makes a hash called <code>%files</code> for a lookup table of file names. And then it checks if it&rsquo;s forgotten any files. Ooops. The output of this is an empty list.</p><p>So that didn&rsquo;t work out. Let&rsquo;s be more explicit.</p><p>There seem to be several options to make Copilot do what you mean. Their examples show comments, function and variable names, and documentation. Let&rsquo;s add a POD block and tell it what we want it to return. The comment above is still there.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#080;font-style:italic>=head2 find_missing_files(@dirs)
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>Takes a list of L&lt;Path::Tiny&gt; objects and returns a hashref 
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>of directories with a list of filenames that do not exist 
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>in all directories each.
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    my $missing_files = find_missing_files(@dirs);
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    # $missing_files = {
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    #     dir_a =&gt; [qw(Comic_Sans.ttf Georgia.ttf Old_Fonts/)],
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    #     dir_b =&gt; [qw(Comic_Sans.ttf Courier_New.ttf Tahoma.ttf)],
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    #     dir_c =&gt; [qw(Courier_New.ttf Monaco.ttf)],
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>=cut</span>
-</span></span></code></pre></td></tr></table></div></div><p>At this point, it&rsquo;s worth looking at different options. I can cycle between suggestions with <kbd>CTRL</kbd> + <kbd>]</kbd>.</p><p><img src=find-missing-files.gif alt="Two different suggestions for find_missing_files"></p><p>One of them returns the structure similar to what we asked for. The other one made lookup hashes instead. I decided to go for the first one. Note it now knows that the input is already Path::Tiny objects. Let&rsquo;s look at the output.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#b8860b>$VAR1</span> <span style=color:#666>=</span> {
-</span></span><span style=display:flex><span>          <span style=color:#b44>&#39;dir_c&#39;</span> <span style=color:#666>=&gt;</span> [
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Courier_New.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Verdana.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Monaco.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Impact.otf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Helvetica.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Arial.ttf&#39;</span>
-</span></span><span style=display:flex><span>                     ],
-</span></span><span style=display:flex><span>          <span style=color:#b44>&#39;dir_b&#39;</span> <span style=color:#666>=&gt;</span> [
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Courier_New.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Verdana.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Tahoma.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Impact.otf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Helvetica.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Comic_Sans.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Arial.ttf&#39;</span>
-</span></span><span style=display:flex><span>                     ],
-</span></span><span style=display:flex><span>          <span style=color:#b44>&#39;dir_a&#39;</span> <span style=color:#666>=&gt;</span> [
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Verdana.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Georgia.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Old_Fonts&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Impact.otf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Helvetica.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Comic_Sans.ttf&#39;</span>,
-</span></span><span style=display:flex><span>                       <span style=color:#b44>&#39;Arial.ttf&#39;</span>
-</span></span><span style=display:flex><span>                     ]
-</span></span><span style=display:flex><span>        };
-</span></span></code></pre></td></tr></table></div></div><p>That does not look very correct at all. Maybe we need to be more explicit in what we ask for.</p><p>I&rsquo;ve deleted the function body, and added some comments instead.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#a2f;font-weight:700>sub</span> <span style=color:#00a000>find_missing_files</span> {
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>@dirs</span> <span style=color:#666>=</span> <span style=color:#b8860b>@_</span>;
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>%missing_files</span>;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># iterate directories</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># iterate files in each directory sorted by their filename</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># if the filename does not exists in all directories, add the </span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># filename to the hash of files for this directory</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><p><img src=find-missing-files-with-comments.gif alt="Function with comments"></p><p>Well that is nice. I just ran it. It said <code>$VAR1 = 0;</code>. There is no <code>return</code> statement. But fear not, Copilot knew this. We just have to ask for it. On the next empty line, it suggests to add <code>return \%missing_files;</code> for us.</p><p>I&rsquo;m going to switch to <a href=https://metacpan.org/pod/Data::Printer>Data::Printer</a> now, because that makes it easier to read.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#666>\</span> {
-</span></span><span style=display:flex><span>    dir_a   [
-</span></span><span style=display:flex><span>        [<span style=color:#666>0</span>] <span style=color:#b44>&#34;Georgia.ttf&#34;</span>,
-</span></span><span style=display:flex><span>        [<span style=color:#666>1</span>] <span style=color:#b44>&#34;Old_Fonts&#34;</span>,
-</span></span><span style=display:flex><span>        [<span style=color:#666>2</span>] <span style=color:#b44>&#34;Comic_Sans.ttf&#34;</span>
-</span></span><span style=display:flex><span>    ],
-</span></span><span style=display:flex><span>    dir_b   [
-</span></span><span style=display:flex><span>        [<span style=color:#666>0</span>] <span style=color:#b44>&#34;Courier_New.ttf&#34;</span>,
-</span></span><span style=display:flex><span>        [<span style=color:#666>1</span>] <span style=color:#b44>&#34;Tahoma.ttf&#34;</span>,
-</span></span><span style=display:flex><span>        [<span style=color:#666>2</span>] <span style=color:#b44>&#34;Comic_Sans.ttf&#34;</span>
-</span></span><span style=display:flex><span>    ],
-</span></span><span style=display:flex><span>    dir_c   [
-</span></span><span style=display:flex><span>        [<span style=color:#666>0</span>] <span style=color:#b44>&#34;Courier_New.ttf&#34;</span>,
-</span></span><span style=display:flex><span>        [<span style=color:#666>1</span>] <span style=color:#b44>&#34;Monaco.ttf&#34;</span>
-</span></span><span style=display:flex><span>    ]
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><p>This is pretty cool. It&rsquo;s got all the files that were missing in at least one other directory. The code it has written is different from my original solution. I had a more explicit variable name <code>%files_that_dont_exist_in_all_dirs_by_dir</code>, and the it&rsquo;s made a slightly more compact function. Let&rsquo;s see if it will do that again.</p><p><img src=find-missing-files-long-var.gif alt="I&amp;rsquo;ve replaced the variable name"></p><p>The output is still the same. Here&rsquo;s the full code of the function so you can compare.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#a2f;font-weight:700>sub</span> <span style=color:#00a000>find_missing_files</span> {
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>@dirs</span> <span style=color:#666>=</span> <span style=color:#b8860b>@_</span>;
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>%files_that_dont_exist_in_all_dirs_by_dir</span>;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># iterate directories</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># iterate files in each directory sorted by their filename</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># if the filename does not exists in all directories, add the </span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic># filename to the hash of files for this directory</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>for</span> <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$dir</span> (<span style=color:#b8860b>@dirs</span>) {
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>@files</span> <span style=color:#666>=</span> <span style=color:#b8860b>$dir</span><span style=color:#666>-&gt;</span>children(<span style=color:green>qr/\w+\.ttf/</span>);
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>for</span> <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$file</span> (<span style=color:#b8860b>@files</span>) {
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$filename</span> <span style=color:#666>=</span> <span style=color:#b8860b>$file</span><span style=color:#666>-&gt;</span>basename;
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$exists_in_all_dirs</span> <span style=color:#666>=</span> <span style=color:#666>1</span>;
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>for</span> <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$dir</span> (<span style=color:#b8860b>@dirs</span>) {
-</span></span><span style=display:flex><span>                <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$file_in_dir</span> <span style=color:#666>=</span> <span style=color:#b8860b>$dir</span><span style=color:#666>-&gt;</span>child(<span style=color:#b8860b>$filename</span>);
-</span></span><span style=display:flex><span>                <span style=color:#a2f;font-weight:700>if</span> (<span style=color:#666>!</span><span style=color:#b8860b>$file_in_dir</span><span style=color:#666>-&gt;</span><span style=color:#a2f>exists</span>) {
-</span></span><span style=display:flex><span>                    <span style=color:#b8860b>$exists_in_all_dirs</span> <span style=color:#666>=</span> <span style=color:#666>0</span>;
-</span></span><span style=display:flex><span>                    <span style=color:#a2f;font-weight:700>last</span>;
-</span></span><span style=display:flex><span>                }
-</span></span><span style=display:flex><span>            }
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>if</span> (<span style=color:#666>!</span><span style=color:#b8860b>$exists_in_all_dirs</span>) {
-</span></span><span style=display:flex><span>                <span style=color:#a2f>push</span> <span style=color:#b8860b>@</span>{ <span style=color:#b8860b>$files_that_dont_exist_in_all_dirs_by_dir</span>{<span style=color:#b8860b>$dir</span>} }, <span style=color:#b8860b>$filename</span>;
-</span></span><span style=display:flex><span>            }
-</span></span><span style=display:flex><span>        }
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>return</span> <span style=color:#666>\</span><span style=color:#b8860b>%files_that_dont_exist_in_all_dirs_by_dir</span>;
-</span></span><span style=display:flex><span>}
+I have used it to write my entries for the Weekly Challenge 166. I am going to look at task 2 in this blog post."><meta name=generator content="Hugo 0.101.0"><link rel="shortcut icon" href=https://simbabque.github.io/favicon.png><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin=anonymous><link rel=stylesheet href=https://simbabque.github.io/fontawesome/css/all.min.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"><link rel=stylesheet type=text/css href=https://simbabque.github.io/css/styles.css><link rel=stylesheet href=https://simbabque.github.io/custom.css><link rel=stylesheet href=https://simbabque.github.io/devicons/style.css><style type=text/css media=screen>@media(prefers-color-scheme:dark){.chroma{color:#f8f8f2;background-color:#272822}.chroma .x{}.chroma .err{color:#960050;background-color:#1e0010}.chroma .lntd{vertical-align:top;padding:0;margin:0;border:0}.chroma .lntable{border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block}.chroma .hl{display:block;width:100%;background-color:#ffc}.chroma .lnt{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .ln{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .k{color:#66d9ef}.chroma .kc{color:#66d9ef}.chroma .kd{color:#66d9ef}.chroma .kn{color:#f92672}.chroma .kp{color:#66d9ef}.chroma .kr{color:#66d9ef}.chroma .kt{color:#66d9ef}.chroma .n{}.chroma .na{color:#a6e22e}.chroma .nb{}.chroma .bp{}.chroma .nc{color:#a6e22e}.chroma .no{color:#66d9ef}.chroma .nd{color:#a6e22e}.chroma .ni{}.chroma .ne{color:#a6e22e}.chroma .nf{color:#a6e22e}.chroma .fm{}.chroma .nl{}.chroma .nn{}.chroma .nx{color:#a6e22e}.chroma .py{}.chroma .nt{color:#f92672}.chroma .nv{}.chroma .vc{}.chroma .vg{}.chroma .vi{}.chroma .vm{}.chroma .l{color:#ae81ff}.chroma .ld{color:#e6db74}.chroma .s{color:#e6db74}.chroma .sa{color:#e6db74}.chroma .sb{color:#e6db74}.chroma .sc{color:#e6db74}.chroma .dl{color:#e6db74}.chroma .sd{color:#e6db74}.chroma .s2{color:#e6db74}.chroma .se{color:#ae81ff}.chroma .sh{color:#e6db74}.chroma .si{color:#e6db74}.chroma .sx{color:#e6db74}.chroma .sr{color:#e6db74}.chroma .s1{color:#e6db74}.chroma .ss{color:#e6db74}.chroma .m{color:#ae81ff}.chroma .mb{color:#ae81ff}.chroma .mf{color:#ae81ff}.chroma .mh{color:#ae81ff}.chroma .mi{color:#ae81ff}.chroma .il{color:#ae81ff}.chroma .mo{color:#ae81ff}.chroma .o{color:#f92672}.chroma .ow{color:#f92672}.chroma .p{}.chroma .c{color:#75715e}.chroma .ch{color:#75715e}.chroma .cm{color:#75715e}.chroma .c1{color:#75715e}.chroma .cs{color:#75715e}.chroma .cp{color:#75715e}.chroma .cpf{color:#75715e}.chroma .g{}.chroma .gd{color:#f92672}.chroma .ge{font-style:italic}.chroma .gr{}.chroma .gh{}.chroma .gi{color:#a6e22e}.chroma .go{}.chroma .gp{}.chroma .gs{font-weight:700}.chroma .gu{color:#75715e}.chroma .gt{}.chroma .gl{}.chroma .w{}}@media(prefers-color-scheme:light){.chroma{background-color:#f8f8f8}.chroma .x{}.chroma .err{}.chroma .lntd{vertical-align:top;padding:0;margin:0;border:0}.chroma .lntable{border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block}.chroma .hl{display:block;width:100%;background-color:#ffc}.chroma .lnt{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .ln{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .k{color:#a2f;font-weight:700}.chroma .kc{color:#a2f;font-weight:700}.chroma .kd{color:#a2f;font-weight:700}.chroma .kn{color:#a2f;font-weight:700}.chroma .kp{color:#a2f}.chroma .kr{color:#a2f;font-weight:700}.chroma .kt{color:#0b0;font-weight:700}.chroma .n{}.chroma .na{color:#b44}.chroma .nb{color:#a2f}.chroma .bp{}.chroma .nc{color:#00f}.chroma .no{color:#800}.chroma .nd{color:#a2f}.chroma .ni{color:#999;font-weight:700}.chroma .ne{color:#d2413a;font-weight:700}.chroma .nf{color:#00a000}.chroma .fm{}.chroma .nl{color:#a0a000}.chroma .nn{color:#00f;font-weight:700}.chroma .nx{}.chroma .py{}.chroma .nt{color:green;font-weight:700}.chroma .nv{color:#b8860b}.chroma .vc{}.chroma .vg{}.chroma .vi{}.chroma .vm{}.chroma .l{}.chroma .ld{}.chroma .s{color:#b44}.chroma .sa{color:#b44}.chroma .sb{color:#b44}.chroma .sc{color:#b44}.chroma .dl{color:#b44}.chroma .sd{color:#b44;font-style:italic}.chroma .s2{color:#b44}.chroma .se{color:#b62;font-weight:700}.chroma .sh{color:#b44}.chroma .si{color:#b68;font-weight:700}.chroma .sx{color:green}.chroma .sr{color:#b68}.chroma .s1{color:#b44}.chroma .ss{color:#b8860b}.chroma .m{color:#666}.chroma .mb{color:#666}.chroma .mf{color:#666}.chroma .mh{color:#666}.chroma .mi{color:#666}.chroma .il{color:#666}.chroma .mo{color:#666}.chroma .o{color:#666}.chroma .ow{color:#a2f;font-weight:700}.chroma .p{}.chroma .c{color:#080;font-style:italic}.chroma .ch{color:#080;font-style:italic}.chroma .cm{color:#080;font-style:italic}.chroma .c1{color:#080;font-style:italic}.chroma .cs{color:#080;font-weight:700}.chroma .cp{color:#080}.chroma .cpf{color:#080}.chroma .g{}.chroma .gd{color:#a00000}.chroma .ge{font-style:italic}.chroma .gr{color:red}.chroma .gh{color:navy;font-weight:700}.chroma .gi{color:#00a000}.chroma .go{color:#888}.chroma .gp{color:navy;font-weight:700}.chroma .gs{font-weight:700}.chroma .gu{color:purple;font-weight:700}.chroma .gt{color:#04d}.chroma .gl{text-decoration:underline}.chroma .w{color:#bbb}}</style></head><body><div id=container><header><h1><a href=https://simbabque.github.io/>Julien&rsquo;s tech(ish) blog</a></h1><ul id=social-media><li><a href=https://github.com/simbabque title=GitHub><i class="fab fa-github fa-lg"></i></a></li><li><a href=https://twitter.com/simbabque title=Twitter><i class="fab fa-twitter fa-lg"></i></a></li><li><a href=https://stackoverflow.com/users/1331451/simbabque title=StackOverflow><i class="fab fa-stack-overflow fa-lg"></i></a></li><li><a href=https://metacpan.org/author/SIMBABQUE title=metacpan><i class="devicons-perl fa-lg"></i></a></li></ul><p><em>A blog about Perl, coding, and making more developers</em></p></header><nav><ul><li><a href=https://simbabque.github.io/categories><i class="fa-li fa fa-lg"></i><span>Categories</span></a></li><li><a href=https://simbabque.github.io/tags><i class="fa-li fa fa-lg"></i><span>Tags</span></a></li><li><a class=active href=https://simbabque.github.io/posts/><i class="fa-li fa fa-lg"></i><span>Posts</span></a></li><li><a href=https://simbabque.github.io/talks/><i class="fa-li fa fa-lg"></i><span>Talks</span></a></li></ul></nav><main><article><h1>The Weekly Challenge 166: Github DWIM</h1><aside><ul><li><time class=post-date datetime=2022-05-29T20:00:00+01:00>May 29, 2022</time></li><li>Categories:
+<em><a href=https://simbabque.github.io/categories/coding>coding</a></em></li><li>14 minute read</li></ul></aside><div class=featured_image><a href=https://simbabque.github.io/posts/weekly-challenge-166-github-copilot/ title="The Weekly Challenge 166: Github DWIM"><img src></a></div><p>I recently got an account for <a href=https://copilot.github.com/>Github Copilot</a>. So let&rsquo;s go and have some fun with it.</p><p>I have used it to write my entries for the <a href=https://theweeklychallenge.org/blog/perl-weekly-challenge-166/>Weekly Challenge 166</a>. I am going to look at task 2 in this blog post. In a gist, you&rsquo;re asked to print a table diff view of files in three directories. It turns out that properly describing the task is actually quite hard.</p><p>I&rsquo;m doing this in <a href=https://code.visualstudio.com/>Visual Studio Code</a>, with the Copilot extension. It prettty much just suggests code and you can accept it, or ask for something else.</p><p><img src=hello-world.gif alt="Hello World in Perl"></p><p>Obviously the first thing I tried was to dump in the whole task description and hope for the best. Of course that did not work.</p><p>Let&rsquo;s talk about assumptions for a second. I didn&rsquo;t think getting the actual task done with Copilot would work. I did not even think it would produce sensible Perl code at all.</p><p>I tried to approach this as naively as possible. I didn&rsquo;t think about the algorithm at all beforehand. I wanted to know how &ldquo;smart&rdquo; this thing really is. Can it replace us?</p><p>As I am recreating this for the blog post, I will end up with slightly different code as the one I&rsquo;ve submitted as my entry. I think for this experiment that&rsquo;s OK.</p><p>I&rsquo;m going to use screen captures of Visual Studio Code where Copilot suggests stuff because that is much easier than writing down what I did and what it did.</p><h2 id=creating-the-directory-structure>Creating the directory structure</h2><p>Before we can begin, we need these three directories and the files. I asked it to make the first one for me. That went reasonably well.</p><p><img src=create-files.gif alt="Creating the first directory"></p><p>This is cute, but not exactly what we need. Instead, I tried to be more explicit, and got this solution, which I&rsquo;ve reindented to fit the blog post.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=c1># iterate over these files and directories:</span>
+</span></span><span class=line><span class=cl><span class=c1># Arial.ttf  Comic_Sans.ttf  Georgia.ttf  </span>
+</span></span><span class=line><span class=cl><span class=c1># Helvetica.ttf  Impact.otf  Verdana.ttf  Old_Fonts/</span>
+</span></span><span class=line><span class=cl><span class=c1># create them in the temporary directory</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=k>my</span> <span class=nv>$file</span> <span class=p>(</span><span class=sx>qw(
+</span></span></span><span class=line><span class=cl><span class=sx>    Arial.ttf Comic_Sans.ttf Georgia.ttf 
+</span></span></span><span class=line><span class=cl><span class=sx>    Helvetica.ttf Impact.otf Verdana.ttf
+</span></span></span><span class=line><span class=cl><span class=sx>)</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$dir_a</span><span class=o>-&gt;</span><span class=n>child</span><span class=p>(</span><span class=nv>$file</span><span class=p>)</span><span class=o>-&gt;</span><span class=n>touchpath</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>As we can see, <code>Old_Fonts/</code> is missing. But it&rsquo;s smart enough to help us with that. We just have to ask.</p><p><img src=create-files-there-it-is.gif alt="Adding an empty line actually makes the missing folder show up"></p><p>Now all we need to do is repeat this two more times. This is now much easier. It seems to be quite context-aware.</p><p><img src=create-files-b.gif alt="Creating directory b is much faster"></p><p>To make <code>dir_c</code> we do the same thing, and it just appears.</p><p>Finally, we don&rsquo;t want to keep these directories around after we&rsquo;re done. So we need to delete them. Let&rsquo;s ask Copilot to do that for us.</p><p><img src=cleanup.gif alt="Deleting the directories"></p><h2 id=find-the-missing-files>Find the missing files</h2><p>This seemed easy. Too easy. Surely it cannot just write the code for us, can it? Let&rsquo;s find out. We&rsquo;re going to give it the brief from the challenge.</p><p>As a reminder, I&rsquo;m recreating this for the blog post. I don&rsquo;t know if Copilot remembers my first attempt. I&rsquo;m doing this in a different directory, different git repository and different VS Code window. The code it produces is not what I got before.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=c1># Given a few (three or more) directories (non-recursively), </span>
+</span></span><span class=line><span class=cl><span class=c1># display a side-by-side difference of files that are </span>
+</span></span><span class=line><span class=cl><span class=c1># missing from at least one of the directories. Do not </span>
+</span></span><span class=line><span class=cl><span class=c1># display files that exist in every directory.</span>
+</span></span></code></pre></td></tr></table></div></div><p>At this point, it doesn&rsquo;t suggest anything. So let&rsquo;s help it a little.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=k>sub</span> <span class=nf>find_missing_files</span> <span class=p>{</span>
+</span></span></code></pre></td></tr></table></div></div><p>The first suggestion it comes up with is this code.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=k>sub</span> <span class=nf>find_missing_files</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>@dirs</span> <span class=o>=</span> <span class=nv>@_</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>@files</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=k>my</span> <span class=nv>$dir</span> <span class=p>(</span><span class=nv>@dirs</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>my</span> <span class=nv>$dir_path</span> <span class=o>=</span> <span class=n>path</span><span class=p>(</span><span class=nv>$dir</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>my</span> <span class=nv>@dir_files</span> <span class=o>=</span> <span class=nv>$dir_path</span><span class=o>-&gt;</span><span class=n>children</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=nb>push</span> <span class=nv>@files</span><span class=p>,</span> <span class=nv>@dir_files</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>%files</span> <span class=o>=</span> <span class=nb>map</span> <span class=p>{</span> <span class=nv>$_</span><span class=o>-&gt;</span><span class=n>basename</span> <span class=o>=&gt;</span> <span class=mi>1</span> <span class=p>}</span> <span class=nv>@files</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>@missing_files</span> <span class=o>=</span> <span class=nb>grep</span> <span class=p>{</span> <span class=o>!</span><span class=nv>$files</span><span class=p>{</span><span class=nv>$_</span><span class=p>}</span> <span class=p>}</span> <span class=nb>keys</span> <span class=nv>%files</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nv>@missing_files</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>It doesn&rsquo;t seem to know that we already have <a href=https://metacpan.org/pod/Path::Tiny>Path::Tiny</a> objects. To be fair, that&rsquo;s probably OK. There&rsquo;s an <code>@files</code> that exists outside of the directory loop. It sticks all files for each directory in to that array, and then makes a hash called <code>%files</code> for a lookup table of file names. And then it checks if it&rsquo;s forgotten any files. Ooops. The output of this is an empty list.</p><p>So that didn&rsquo;t work out. Let&rsquo;s be more explicit.</p><p>There seem to be several options to make Copilot do what you mean. Their examples show comments, function and variable names, and documentation. Let&rsquo;s add a POD block and tell it what we want it to return. The comment above is still there.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=cm>=head2 find_missing_files(@dirs)
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>Takes a list of L&lt;Path::Tiny&gt; objects and returns a hashref 
+</span></span></span><span class=line><span class=cl><span class=cm>of directories with a list of filenames that do not exist 
+</span></span></span><span class=line><span class=cl><span class=cm>in all directories each.
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>    my $missing_files = find_missing_files(@dirs);
+</span></span></span><span class=line><span class=cl><span class=cm>    # $missing_files = {
+</span></span></span><span class=line><span class=cl><span class=cm>    #     dir_a =&gt; [qw(Comic_Sans.ttf Georgia.ttf Old_Fonts/)],
+</span></span></span><span class=line><span class=cl><span class=cm>    #     dir_b =&gt; [qw(Comic_Sans.ttf Courier_New.ttf Tahoma.ttf)],
+</span></span></span><span class=line><span class=cl><span class=cm>    #     dir_c =&gt; [qw(Courier_New.ttf Monaco.ttf)],
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>=cut</span>
+</span></span></code></pre></td></tr></table></div></div><p>At this point, it&rsquo;s worth looking at different options. I can cycle between suggestions with <kbd>CTRL</kbd> + <kbd>]</kbd>.</p><p><img src=find-missing-files.gif alt="Two different suggestions for find_missing_files"></p><p>One of them returns the structure similar to what we asked for. The other one made lookup hashes instead. I decided to go for the first one. Note it now knows that the input is already Path::Tiny objects. Let&rsquo;s look at the output.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=nv>$VAR1</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=s>&#39;dir_c&#39;</span> <span class=o>=&gt;</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Courier_New.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Verdana.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Monaco.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Impact.otf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Helvetica.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Arial.ttf&#39;</span>
+</span></span><span class=line><span class=cl>                     <span class=p>],</span>
+</span></span><span class=line><span class=cl>          <span class=s>&#39;dir_b&#39;</span> <span class=o>=&gt;</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Courier_New.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Verdana.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Tahoma.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Impact.otf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Helvetica.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Comic_Sans.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Arial.ttf&#39;</span>
+</span></span><span class=line><span class=cl>                     <span class=p>],</span>
+</span></span><span class=line><span class=cl>          <span class=s>&#39;dir_a&#39;</span> <span class=o>=&gt;</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Verdana.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Georgia.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Old_Fonts&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Impact.otf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Helvetica.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Comic_Sans.ttf&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=s>&#39;Arial.ttf&#39;</span>
+</span></span><span class=line><span class=cl>                     <span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>That does not look very correct at all. Maybe we need to be more explicit in what we ask for.</p><p>I&rsquo;ve deleted the function body, and added some comments instead.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=k>sub</span> <span class=nf>find_missing_files</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>@dirs</span> <span class=o>=</span> <span class=nv>@_</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>%missing_files</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># iterate directories</span>
+</span></span><span class=line><span class=cl>    <span class=c1># iterate files in each directory sorted by their filename</span>
+</span></span><span class=line><span class=cl>    <span class=c1># if the filename does not exists in all directories, add the </span>
+</span></span><span class=line><span class=cl>    <span class=c1># filename to the hash of files for this directory</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><img src=find-missing-files-with-comments.gif alt="Function with comments"></p><p>Well that is nice. I just ran it. It said <code>$VAR1 = 0;</code>. There is no <code>return</code> statement. But fear not, Copilot knew this. We just have to ask for it. On the next empty line, it suggests to add <code>return \%missing_files;</code> for us.</p><p>I&rsquo;m going to switch to <a href=https://metacpan.org/pod/Data::Printer>Data::Printer</a> now, because that makes it easier to read.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=o>\</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>dir_a</span>   <span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=s>&#34;Georgia.ttf&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=s>&#34;Old_Fonts&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=mi>2</span><span class=p>]</span> <span class=s>&#34;Comic_Sans.ttf&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=n>dir_b</span>   <span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=s>&#34;Courier_New.ttf&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=s>&#34;Tahoma.ttf&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=mi>2</span><span class=p>]</span> <span class=s>&#34;Comic_Sans.ttf&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=n>dir_c</span>   <span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=s>&#34;Courier_New.ttf&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=s>&#34;Monaco.ttf&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>This is pretty cool. It&rsquo;s got all the files that were missing in at least one other directory. The code it has written is different from my original solution. I had a more explicit variable name <code>%files_that_dont_exist_in_all_dirs_by_dir</code>, and the it&rsquo;s made a slightly more compact function. Let&rsquo;s see if it will do that again.</p><p><img src=find-missing-files-long-var.gif alt="I&amp;rsquo;ve replaced the variable name"></p><p>The output is still the same. Here&rsquo;s the full code of the function so you can compare.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=k>sub</span> <span class=nf>find_missing_files</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>@dirs</span> <span class=o>=</span> <span class=nv>@_</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>%files_that_dont_exist_in_all_dirs_by_dir</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># iterate directories</span>
+</span></span><span class=line><span class=cl>    <span class=c1># iterate files in each directory sorted by their filename</span>
+</span></span><span class=line><span class=cl>    <span class=c1># if the filename does not exists in all directories, add the </span>
+</span></span><span class=line><span class=cl>    <span class=c1># filename to the hash of files for this directory</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=k>my</span> <span class=nv>$dir</span> <span class=p>(</span><span class=nv>@dirs</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>my</span> <span class=nv>@files</span> <span class=o>=</span> <span class=nv>$dir</span><span class=o>-&gt;</span><span class=n>children</span><span class=p>(</span><span class=sx>qr/\w+\.ttf/</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=k>my</span> <span class=nv>$file</span> <span class=p>(</span><span class=nv>@files</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>my</span> <span class=nv>$filename</span> <span class=o>=</span> <span class=nv>$file</span><span class=o>-&gt;</span><span class=n>basename</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>my</span> <span class=nv>$exists_in_all_dirs</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=k>my</span> <span class=nv>$dir</span> <span class=p>(</span><span class=nv>@dirs</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>my</span> <span class=nv>$file_in_dir</span> <span class=o>=</span> <span class=nv>$dir</span><span class=o>-&gt;</span><span class=n>child</span><span class=p>(</span><span class=nv>$filename</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nv>$file_in_dir</span><span class=o>-&gt;</span><span class=nb>exists</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=nv>$exists_in_all_dirs</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>last</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nv>$exists_in_all_dirs</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=nb>push</span> <span class=nv>@</span><span class=p>{</span> <span class=nv>$files_that_dont_exist_in_all_dirs_by_dir</span><span class=p>{</span><span class=nv>$dir</span><span class=p>}</span> <span class=p>},</span> <span class=nv>$filename</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=o>\</span><span class=nv>%files_that_dont_exist_in_all_dirs_by_dir</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></td></tr></table></div></div><h2 id=making-a-table>Making a table</h2><p>At this point, I am already quite impressed. But can we really make this into an ASCII table? Surely it cannot be that &ldquo;smart&rdquo;.</p><p><img src=my-missing-files.gif alt="It knows how to call our function"></p><p>Right. Now we&rsquo;ve got this data structure with the directories and the missing files. Nice. But what do we do now?</p><p>How about we ask it to make a table.</p><p><img src=make-a-table.gif alt="We asked it to make a table"></p><p>Well, that was a bit underwhelming. It&rsquo;s just produced the comments we wrote above, when we described the previous function, with a slightl modification.</p><p>Maybe we need to tell it we&rsquo;re wrinting a function instead.</p><p><img src=function-make-table.gif alt="First attempt at making a table"></p><p>This is&mldr; interesting. It has assumed we can pass in <code>$missing_files</code> to the new function. When I add a <code>print make_table(</code> it also auto completes the variable name into the function call. Neat. However it errors, because it has remembered that we&rsquo;ve got Path::Tiny, but not in that data structure. So there is no <code>basename</code> on that <code>$dir</code>, and it blows up.</p><pre tabindex=0><code>Can&#39;t locate object method &#34;basename&#34; via package &#34;dir_a&#34; 
 (perhaps you forgot to load &#34;dir_a&#34;?) at test.pl line 109.
-</code></pre><p>So we need to be more explicit. I&rsquo;ve tried a lot of different approaches for this. We&rsquo;re only going to look at a few of them.</p><p>First of all, let&rsquo;s not reinvent the wheel here. There are plenty of modules on CPAN to make text tables. I decided to use <a href=https://metacpan.org/pod/Text::Table::Tiny>Text::Table::Tiny</a>, because it has an easy to use interface.</p><p>I have added <code>use Text::Table::Tiny 'generate_table';</code> to the top of the file. Let&rsquo;s see if that makes a difference to the suggestions we get.</p><p><img src=function-make-table-2.gif alt="Second attempt at making a table, now with generate_table"></p><p>Well, this makes a difference. It knows that there is a <code>generate_table</code> function imported. But it doesn&rsquo;t know the API behind it, so it&rsquo;s passing in an array. Here is the code it&rsquo;s generated.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#a2f;font-weight:700>sub</span> <span style=color:#00a000>make_table</span> {
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$missing_files</span> <span style=color:#666>=</span> <span style=color:#a2f>shift</span>;
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>@rows</span>;
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>for</span> <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$dir</span> (<span style=color:#a2f>sort</span> <span style=color:#a2f>keys</span> <span style=color:#b8860b>%$missing_files</span>) {
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>$dir_name</span> <span style=color:#666>=</span> <span style=color:#b8860b>$dir</span><span style=color:#666>-&gt;</span>basename;
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>my</span> <span style=color:#b8860b>@files</span> <span style=color:#666>=</span> <span style=color:#a2f>sort</span> <span style=color:#b8860b>@</span>{ <span style=color:#b8860b>$missing_files</span><span style=color:#666>-&gt;</span>{<span style=color:#b8860b>$dir</span>} };
-</span></span><span style=display:flex><span>        <span style=color:#a2f>push</span> <span style=color:#b8860b>@rows</span>, [<span style=color:#b8860b>$dir_name</span>, <span style=color:#b8860b>@files</span>];
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>return</span> generate_table(<span style=color:#b8860b>@rows</span>);
-</span></span><span style=display:flex><span>}
-</span></span></code></pre></td></tr></table></div></div><p>We&rsquo;ve told it to make a table, and it looks like that&rsquo;s what it&rsquo;s done. Again, it assumes the keys in <code>$missing_files</code> are Path::Tiny objects, so that will error. And then Text::Table::Tiny will complain because it&rsquo;s not got a <code>rows</code> argument. So we have to be more explicit.</p><p><img src=function-make-table-3.gif alt="Third attempt at making a table"></p><p>Ok. Well. It knows the directories are in the keys. But still not very helpful. We have to tell it what output we want.</p><p>I&rsquo;ve written the following POD for the function. As you can see, this contains the data structure we also used for the previous function, as well as the table from the original challenge text.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#080;font-style:italic>=head2 make_table($missing_files_by_dir)
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>Takes a hashref of dirs, each containing a list of missing 
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>files and returns a L&lt;Text::Table::Tiny&gt; object.
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    my $table = make_table($missing_files_by_dir);
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>The input data looks like this:
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    $missing_files = {
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         dir_a =&gt; [qw(Comic_Sans.ttf Georgia.ttf Old_Fonts/)],
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         dir_b =&gt; [qw(Comic_Sans.ttf Courier_New.ttf Tahoma.ttf)],
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         dir_c =&gt; [qw(Courier_New.ttf Monaco.ttf)],
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    }
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>The table has one column per directory, and one row per file. The rows are 
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>sorted by filename. If a file is missing from a directory, the cell is empty.
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    dir_a          | dir_b           | dir_c
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    -------------- | --------------- | ---------------
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    Comic_Sans.ttf | Comic_Sans.ttf  |
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>                   | Courier_New.ttf | Courier_New.ttf
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    Georgia.ttf    |                 |
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>                   |                 | Monaco.ttf
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    Old_Fonts/     |                 |
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>                   | Tahoma.ttf      |
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>=cut</span>
+</code></pre><p>So we need to be more explicit. I&rsquo;ve tried a lot of different approaches for this. We&rsquo;re only going to look at a few of them.</p><p>First of all, let&rsquo;s not reinvent the wheel here. There are plenty of modules on CPAN to make text tables. I decided to use <a href=https://metacpan.org/pod/Text::Table::Tiny>Text::Table::Tiny</a>, because it has an easy to use interface.</p><p>I have added <code>use Text::Table::Tiny 'generate_table';</code> to the top of the file. Let&rsquo;s see if that makes a difference to the suggestions we get.</p><p><img src=function-make-table-2.gif alt="Second attempt at making a table, now with generate_table"></p><p>Well, this makes a difference. It knows that there is a <code>generate_table</code> function imported. But it doesn&rsquo;t know the API behind it, so it&rsquo;s passing in an array. Here is the code it&rsquo;s generated.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=k>sub</span> <span class=nf>make_table</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>$missing_files</span> <span class=o>=</span> <span class=nb>shift</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>my</span> <span class=nv>@rows</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=k>my</span> <span class=nv>$dir</span> <span class=p>(</span><span class=nb>sort</span> <span class=nb>keys</span> <span class=nv>%$missing_files</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>my</span> <span class=nv>$dir_name</span> <span class=o>=</span> <span class=nv>$dir</span><span class=o>-&gt;</span><span class=n>basename</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>my</span> <span class=nv>@files</span> <span class=o>=</span> <span class=nb>sort</span> <span class=nv>@</span><span class=p>{</span> <span class=nv>$missing_files</span><span class=o>-&gt;</span><span class=p>{</span><span class=nv>$dir</span><span class=p>}</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl>        <span class=nb>push</span> <span class=nv>@rows</span><span class=p>,</span> <span class=p>[</span><span class=nv>$dir_name</span><span class=p>,</span> <span class=nv>@files</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>generate_table</span><span class=p>(</span><span class=nv>@rows</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>We&rsquo;ve told it to make a table, and it looks like that&rsquo;s what it&rsquo;s done. Again, it assumes the keys in <code>$missing_files</code> are Path::Tiny objects, so that will error. And then Text::Table::Tiny will complain because it&rsquo;s not got a <code>rows</code> argument. So we have to be more explicit.</p><p><img src=function-make-table-3.gif alt="Third attempt at making a table"></p><p>Ok. Well. It knows the directories are in the keys. But still not very helpful. We have to tell it what output we want.</p><p>I&rsquo;ve written the following POD for the function. As you can see, this contains the data structure we also used for the previous function, as well as the table from the original challenge text.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=cm>=head2 make_table($missing_files_by_dir)
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>Takes a hashref of dirs, each containing a list of missing 
+</span></span></span><span class=line><span class=cl><span class=cm>files and returns a L&lt;Text::Table::Tiny&gt; object.
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>    my $table = make_table($missing_files_by_dir);
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>The input data looks like this:
+</span></span></span><span class=line><span class=cl><span class=cm>     
+</span></span></span><span class=line><span class=cl><span class=cm>    $missing_files = {
+</span></span></span><span class=line><span class=cl><span class=cm>         dir_a =&gt; [qw(Comic_Sans.ttf Georgia.ttf Old_Fonts/)],
+</span></span></span><span class=line><span class=cl><span class=cm>         dir_b =&gt; [qw(Comic_Sans.ttf Courier_New.ttf Tahoma.ttf)],
+</span></span></span><span class=line><span class=cl><span class=cm>         dir_c =&gt; [qw(Courier_New.ttf Monaco.ttf)],
+</span></span></span><span class=line><span class=cl><span class=cm>    }
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>The table has one column per directory, and one row per file. The rows are 
+</span></span></span><span class=line><span class=cl><span class=cm>sorted by filename. If a file is missing from a directory, the cell is empty.
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>    dir_a          | dir_b           | dir_c
+</span></span></span><span class=line><span class=cl><span class=cm>    -------------- | --------------- | ---------------
+</span></span></span><span class=line><span class=cl><span class=cm>    Comic_Sans.ttf | Comic_Sans.ttf  |
+</span></span></span><span class=line><span class=cl><span class=cm>                   | Courier_New.ttf | Courier_New.ttf
+</span></span></span><span class=line><span class=cl><span class=cm>    Georgia.ttf    |                 |
+</span></span></span><span class=line><span class=cl><span class=cm>                   |                 | Monaco.ttf
+</span></span></span><span class=line><span class=cl><span class=cm>    Old_Fonts/     |                 |
+</span></span></span><span class=line><span class=cl><span class=cm>                   | Tahoma.ttf      |
+</span></span></span><span class=line><span class=cl><span class=cm>
+</span></span></span><span class=line><span class=cl><span class=cm>=cut</span>
 </span></span></code></pre></td></tr></table></div></div><p>It suggests two different functions. The second one is much longer, and is quite interesting. It has made up a bunch of arguments for <code>generate_table</code> that look quite sensible. It seems to try to reproduce the table from the POD with the lines on the inside, but not the border around it. It also doesn&rsquo;t assume that the keys in the hash are Path::Tiny objects any more.</p><p><img src=function-make-table-pod.gif alt="Fourth attempt at making a table"></p><p>Unfortunately, the code does not compile, because almost all of the arguments to <code>generate_table</code> are wrong. If I delete all the wrong ones, there is output. But it&rsquo;s not very useful. Clearly it&rsquo;s not found any files.</p><pre tabindex=0><code>++
 |
 ++
@@ -345,43 +345,43 @@ I have used it to write my entries for the Weekly Challenge 166. I am going to l
 | Courier_New.ttf |  |
 | Monaco.ttf      |  |
 +-----------------+--+
-</code></pre><p>I am going to skip a few iteration steps now, where I tried to tell it exactly what I want the output to be in various different ways. None of them produced anything useful. Then I tried to describe the logic. I did say in the beginning I didn&rsquo;t want to think about the algorithm, but I think I have no other choice.</p><p><img src=function-make-table-comments.gif alt="Sixth attempt at making a table"></p><p>Oh no. It thinks there are Path::Tiny objects again. It&rsquo;s not going to compile.</p><p>Let&rsquo;s try something else first. The final output has one row per file, where all files in all directories are included. We can ask it to make that.</p><p><img src=function-make-table-uniq.gif alt="Seventh attempt at making a table"></p><p>This is shiny. It&rsquo;s come up with the <code>uniq</code> and loaded <a href=https://metacpan.org/pod/List::Util>List::Util</a> after we asked for it. The <code>@files</code> look like this.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">7
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span>[
-</span></span><span style=display:flex><span>    [<span style=color:#666>0</span>] <span style=color:#b44>&#34;Comic_Sans.ttf&#34;</span>,
-</span></span><span style=display:flex><span>    [<span style=color:#666>1</span>] <span style=color:#b44>&#34;Courier_New.ttf&#34;</span>,
-</span></span><span style=display:flex><span>    [<span style=color:#666>2</span>] <span style=color:#b44>&#34;Georgia.ttf&#34;</span>,
-</span></span><span style=display:flex><span>    [<span style=color:#666>3</span>] <span style=color:#b44>&#34;Monaco.ttf&#34;</span>,
-</span></span><span style=display:flex><span>    [<span style=color:#666>4</span>] <span style=color:#b44>&#34;Tahoma.ttf&#34;</span>
-</span></span><span style=display:flex><span>]
-</span></span></code></pre></td></tr></table></div></div><p>This is correct-ish. We&rsquo;re missing the folder <code>Old_Fonts</code>. I actually didn&rsquo;t notice this earlier. Scroll up, and you will see that the code for <code>find_missing_files</code> that we accepted filters <code>.ttf</code> files out of the children. I&rsquo;m going to remove that bit now. My original code did not have the filter. I suspect it is because I asked explicitly for <em>files</em>.</p><p>The next thing we need to do is get the directories. We want one row per file, and one column per directory. It seems to be intent on using an explicit <code>sort { $a cmp $b }</code> even though it doesn&rsquo;t need that. I tried alternatives, but there were none. Ok, fine.</p><p><img src=function-make-table-dirs.gif alt="Getting directories"></p><p>Let&rsquo;s try again. I&rsquo;ve rewritten the instructions inside the array ref.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#080;font-style:italic># iterate the files</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># iterate the directories for each file</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># check if the file exists in the directory</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># if it does, add the filename to the row</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># if it doesn&#39;t, add an empty cell to the row</span>
+</code></pre><p>I am going to skip a few iteration steps now, where I tried to tell it exactly what I want the output to be in various different ways. None of them produced anything useful. Then I tried to describe the logic. I did say in the beginning I didn&rsquo;t want to think about the algorithm, but I think I have no other choice.</p><p><img src=function-make-table-comments.gif alt="Sixth attempt at making a table"></p><p>Oh no. It thinks there are Path::Tiny objects again. It&rsquo;s not going to compile.</p><p>Let&rsquo;s try something else first. The final output has one row per file, where all files in all directories are included. We can ask it to make that.</p><p><img src=function-make-table-uniq.gif alt="Seventh attempt at making a table"></p><p>This is shiny. It&rsquo;s come up with the <code>uniq</code> and loaded <a href=https://metacpan.org/pod/List::Util>List::Util</a> after we asked for it. The <code>@files</code> look like this.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=s>&#34;Comic_Sans.ttf&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=s>&#34;Courier_New.ttf&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=mi>2</span><span class=p>]</span> <span class=s>&#34;Georgia.ttf&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=mi>3</span><span class=p>]</span> <span class=s>&#34;Monaco.ttf&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=mi>4</span><span class=p>]</span> <span class=s>&#34;Tahoma.ttf&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>This is correct-ish. We&rsquo;re missing the folder <code>Old_Fonts</code>. I actually didn&rsquo;t notice this earlier. Scroll up, and you will see that the code for <code>find_missing_files</code> that we accepted filters <code>.ttf</code> files out of the children. I&rsquo;m going to remove that bit now. My original code did not have the filter. I suspect it is because I asked explicitly for <em>files</em>.</p><p>The next thing we need to do is get the directories. We want one row per file, and one column per directory. It seems to be intent on using an explicit <code>sort { $a cmp $b }</code> even though it doesn&rsquo;t need that. I tried alternatives, but there were none. Ok, fine.</p><p><img src=function-make-table-dirs.gif alt="Getting directories"></p><p>Let&rsquo;s try again. I&rsquo;ve rewritten the instructions inside the array ref.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=c1># iterate the files</span>
+</span></span><span class=line><span class=cl><span class=c1># iterate the directories for each file</span>
+</span></span><span class=line><span class=cl><span class=c1># check if the file exists in the directory</span>
+</span></span><span class=line><span class=cl><span class=c1># if it does, add the filename to the row</span>
+</span></span><span class=line><span class=cl><span class=c1># if it doesn&#39;t, add an empty cell to the row</span>
 </span></span></code></pre></td></tr></table></div></div><p><img src=function-make-table-more-comments.gif alt="Eighth attempt at making a table"></p><p>It&rsquo;s still trying to do Path::Tiny objects. Maybe we have to help it a little. Let&rsquo;s try to put the header row in first, maybe that&rsquo;ll make it smarter.</p><p><img src=function-make-table-help-dirs.gif alt="Ninth attempt at making a table"></p><p>That was&mldr; painful. I&rsquo;m not sure why it did not want to do what I meant here, but at least it&rsquo;s worked it out in the end.</p><p><img src=function-make-hard-wtf.gif alt="Tenth attempt at making a table"></p><p>The above gif shows nicely how stuff changes when you change some words. But it still won&rsquo;t work. It now blows up with</p><pre tabindex=0><code>Can&#39;t use string (&#34;&#34;) as an ARRAY ref while &#34;strict refs&#34; in use at /home/simbabque/perl5/perlbrew/perls/perl-5.28.0/lib/site_perl/5.28.0/Text/Table/Tiny.pm line 187.
-</code></pre><p>That&rsquo;s because we&rsquo;re not returning an array reference from that <code>map</code>. And the code inside the inner <code>map</code> is probably not going to work either. I have no idea what that element 0 is supposed to be.</p><p>So let&rsquo;s make a final set of changes. We&rsquo;re going to tell it explicitly that we want an array reference. And we are going to try to convince it that there are file names, not objects.</p><p>The comments now look like this.</p><div class=highlight><div style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-perl data-lang=perl><span style=display:flex><span><span style=color:#080;font-style:italic># iterate the file names</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># iterate the dir for each file</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># test all file names in the dir to see if the filename exists</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># if it does, add the filename to the row</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># if it doesn&#39;t, add an empty cell to the row</span>
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic># return an array reference</span>
+</code></pre><p>That&rsquo;s because we&rsquo;re not returning an array reference from that <code>map</code>. And the code inside the inner <code>map</code> is probably not going to work either. I have no idea what that element 0 is supposed to be.</p><p>So let&rsquo;s make a final set of changes. We&rsquo;re going to tell it explicitly that we want an array reference. And we are going to try to convince it that there are file names, not objects.</p><p>The comments now look like this.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-perl data-lang=perl><span class=line><span class=cl><span class=c1># iterate the file names</span>
+</span></span><span class=line><span class=cl><span class=c1># iterate the dir for each file</span>
+</span></span><span class=line><span class=cl><span class=c1># test all file names in the dir to see if the filename exists</span>
+</span></span><span class=line><span class=cl><span class=c1># if it does, add the filename to the row</span>
+</span></span><span class=line><span class=cl><span class=c1># if it doesn&#39;t, add an empty cell to the row</span>
+</span></span><span class=line><span class=cl><span class=c1># return an array reference</span>
 </span></span></code></pre></td></tr></table></div></div><p>And now it suggests the following code.</p><p><img src=function-make-final.gif alt="Eleventh attempt at making a table"></p><p>It&rsquo;s got an array ref. It&rsquo;s got <code>grep</code> rather than method calls. This is promising. Let&rsquo;s run it.</p><pre tabindex=0><code>+----------------+-----------------+-----------------+
 | dir_a          | dir_b           | dir_c           |
 +----------------+-----------------+-----------------+
