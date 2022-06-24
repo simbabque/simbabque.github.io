@@ -16,6 +16,7 @@ pygmentsCodeFences = true
 [markup.highlight]
     style = 'emacs'
     lineNos = true
+    noclasses = false
 
 [params]
     tagline = "A blog about Perl, coding, and making more developers"
