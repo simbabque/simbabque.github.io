@@ -33,7 +33,7 @@ A modern Perl module distribution typicall defines its dependencies in a [cpanfi
 In my case, this [gets picked up by Dist::Zilla and turned into the META.json file](https://metacpan.org/pod/Dist::Zilla::Plugin::Prereqs::FromCPANfile).
 You can specify different phases such as `develop`, `test`, `build` and `runtime`, as well as how badly
 your module needs a particular module. The default is `requires`, which means you have to have it, but it can also `recommends` or `suggests` things
-that you might want to install. More details on this can be found in (CPAN::Meta::Spec)[https://metacpan.org/pod/CPAN::Meta::Spec#Prereq-Spec].
+that you might want to install. More details on this can be found in [CPAN::Meta::Spec](https://metacpan.org/pod/CPAN::Meta::Spec#Prereq-Spec).
 
 I started out listing all of the things I could test against as `recommends`. My cpanfile looked like this.
 
