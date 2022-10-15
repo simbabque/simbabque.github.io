@@ -1,0 +1,302 @@
+<!doctype html><html lang=en-gb><head><title>A Github Workflow guide for CPAN modules - Julien's tech(ish) blog</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="A blog about the Perl programming language, training, and managing developers"><meta name=author content="Julien Fiegehenn"><meta property="og:title" content="A Github Workflow guide for CPAN modules"><meta property="og:description" content="In my previous post on special dependencies I have already talked about Github Actions. This is a recap on the tooling I mentioned in this talk, with a short guide on how to use it."><meta property="og:type" content="article"><meta property="og:url" content="https://simbabque.github.io/posts/github-workflow-guide-for-modules/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-10-14T23:00:00+01:00"><meta property="article:modified_time" content="2022-10-14T23:00:00+01:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="A Github Workflow guide for CPAN modules"><meta name=twitter:description content="In my previous post on special dependencies I have already talked about Github Actions. This is a recap on the tooling I mentioned in this talk, with a short guide on how to use it."><meta name=generator content="Hugo 0.104.3"><link rel="shortcut icon" href=https://simbabque.github.io/favicon.png><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin=anonymous><link rel=stylesheet href=https://simbabque.github.io/fontawesome/css/all.min.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda"><link rel=stylesheet type=text/css href=https://simbabque.github.io/css/styles.css><link rel=stylesheet href=https://simbabque.github.io/custom.css><link rel=stylesheet href=https://simbabque.github.io/devicons/style.css><style type=text/css media=screen>@media(prefers-color-scheme:dark){.chroma{color:#f8f8f2;background-color:#272822}.chroma .x{}.chroma .err{color:#960050;background-color:#1e0010}.chroma .lntd{vertical-align:top;padding:0;margin:0;border:0}.chroma .lntable{border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block}.chroma .hl{display:block;width:100%;background-color:#ffc}.chroma .lnt{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .ln{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .k{color:#66d9ef}.chroma .kc{color:#66d9ef}.chroma .kd{color:#66d9ef}.chroma .kn{color:#f92672}.chroma .kp{color:#66d9ef}.chroma .kr{color:#66d9ef}.chroma .kt{color:#66d9ef}.chroma .n{}.chroma .na{color:#a6e22e}.chroma .nb{}.chroma .bp{}.chroma .nc{color:#a6e22e}.chroma .no{color:#66d9ef}.chroma .nd{color:#a6e22e}.chroma .ni{}.chroma .ne{color:#a6e22e}.chroma .nf{color:#a6e22e}.chroma .fm{}.chroma .nl{}.chroma .nn{}.chroma .nx{color:#a6e22e}.chroma .py{}.chroma .nt{color:#f92672}.chroma .nv{}.chroma .vc{}.chroma .vg{}.chroma .vi{}.chroma .vm{}.chroma .l{color:#ae81ff}.chroma .ld{color:#e6db74}.chroma .s{color:#e6db74}.chroma .sa{color:#e6db74}.chroma .sb{color:#e6db74}.chroma .sc{color:#e6db74}.chroma .dl{color:#e6db74}.chroma .sd{color:#e6db74}.chroma .s2{color:#e6db74}.chroma .se{color:#ae81ff}.chroma .sh{color:#e6db74}.chroma .si{color:#e6db74}.chroma .sx{color:#e6db74}.chroma .sr{color:#e6db74}.chroma .s1{color:#e6db74}.chroma .ss{color:#e6db74}.chroma .m{color:#ae81ff}.chroma .mb{color:#ae81ff}.chroma .mf{color:#ae81ff}.chroma .mh{color:#ae81ff}.chroma .mi{color:#ae81ff}.chroma .il{color:#ae81ff}.chroma .mo{color:#ae81ff}.chroma .o{color:#f92672}.chroma .ow{color:#f92672}.chroma .p{}.chroma .c{color:#75715e}.chroma .ch{color:#75715e}.chroma .cm{color:#75715e}.chroma .c1{color:#75715e}.chroma .cs{color:#75715e}.chroma .cp{color:#75715e}.chroma .cpf{color:#75715e}.chroma .g{}.chroma .gd{color:#f92672}.chroma .ge{font-style:italic}.chroma .gr{}.chroma .gh{}.chroma .gi{color:#a6e22e}.chroma .go{}.chroma .gp{}.chroma .gs{font-weight:700}.chroma .gu{color:#75715e}.chroma .gt{}.chroma .gl{}.chroma .w{}}@media(prefers-color-scheme:light){.chroma{background-color:#f8f8f8}.chroma .x{}.chroma .err{}.chroma .lntd{vertical-align:top;padding:0;margin:0;border:0}.chroma .lntable{border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block}.chroma .hl{display:block;width:100%;background-color:#ffc}.chroma .lnt{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .ln{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .k{color:#a2f;font-weight:700}.chroma .kc{color:#a2f;font-weight:700}.chroma .kd{color:#a2f;font-weight:700}.chroma .kn{color:#a2f;font-weight:700}.chroma .kp{color:#a2f}.chroma .kr{color:#a2f;font-weight:700}.chroma .kt{color:#0b0;font-weight:700}.chroma .n{}.chroma .na{color:#b44}.chroma .nb{color:#a2f}.chroma .bp{}.chroma .nc{color:#00f}.chroma .no{color:#800}.chroma .nd{color:#a2f}.chroma .ni{color:#999;font-weight:700}.chroma .ne{color:#d2413a;font-weight:700}.chroma .nf{color:#00a000}.chroma .fm{}.chroma .nl{color:#a0a000}.chroma .nn{color:#00f;font-weight:700}.chroma .nx{}.chroma .py{}.chroma .nt{color:green;font-weight:700}.chroma .nv{color:#b8860b}.chroma .vc{}.chroma .vg{}.chroma .vi{}.chroma .vm{}.chroma .l{}.chroma .ld{}.chroma .s{color:#b44}.chroma .sa{color:#b44}.chroma .sb{color:#b44}.chroma .sc{color:#b44}.chroma .dl{color:#b44}.chroma .sd{color:#b44;font-style:italic}.chroma .s2{color:#b44}.chroma .se{color:#b62;font-weight:700}.chroma .sh{color:#b44}.chroma .si{color:#b68;font-weight:700}.chroma .sx{color:green}.chroma .sr{color:#b68}.chroma .s1{color:#b44}.chroma .ss{color:#b8860b}.chroma .m{color:#666}.chroma .mb{color:#666}.chroma .mf{color:#666}.chroma .mh{color:#666}.chroma .mi{color:#666}.chroma .il{color:#666}.chroma .mo{color:#666}.chroma .o{color:#666}.chroma .ow{color:#a2f;font-weight:700}.chroma .p{}.chroma .c{color:#080;font-style:italic}.chroma .ch{color:#080;font-style:italic}.chroma .cm{color:#080;font-style:italic}.chroma .c1{color:#080;font-style:italic}.chroma .cs{color:#080;font-weight:700}.chroma .cp{color:#080}.chroma .cpf{color:#080}.chroma .g{}.chroma .gd{color:#a00000}.chroma .ge{font-style:italic}.chroma .gr{color:red}.chroma .gh{color:navy;font-weight:700}.chroma .gi{color:#00a000}.chroma .go{color:#888}.chroma .gp{color:navy;font-weight:700}.chroma .gs{font-weight:700}.chroma .gu{color:purple;font-weight:700}.chroma .gt{color:#04d}.chroma .gl{text-decoration:underline}.chroma .w{color:#bbb}}</style></head><body><div id=container><header><h1><a href=https://simbabque.github.io/>Julien&rsquo;s tech(ish) blog</a></h1><ul id=social-media><li><a href=https://github.com/simbabque title=GitHub><i class="fab fa-github fa-lg"></i></a></li><li><a href=https://twitter.com/simbabque title=Twitter><i class="fab fa-twitter fa-lg"></i></a></li><li><a href=https://stackoverflow.com/users/1331451/simbabque title=StackOverflow><i class="fab fa-stack-overflow fa-lg"></i></a></li><li><a href=https://metacpan.org/author/SIMBABQUE title=metacpan><i class="devicons-perl fa-lg"></i></a></li></ul><p><em>A blog about Perl, coding, and making more developers</em></p></header><nav><ul><li><a href=https://simbabque.github.io/categories><i class="fa-li fa fa-lg"></i><span>Categories</span></a></li><li><a href=https://simbabque.github.io/tags><i class="fa-li fa fa-lg"></i><span>Tags</span></a></li><li><a class=active href=https://simbabque.github.io/posts/><i class="fa-li fa fa-lg"></i><span>Posts</span></a></li><li><a href=https://simbabque.github.io/talks/><i class="fa-li fa fa-lg"></i><span>Talks</span></a></li></ul></nav><main><article><h1>A Github Workflow guide for CPAN modules</h1><aside><ul><li><time class=post-date datetime=2022-10-14T23:00:00+01:00>Oct 14, 2022</time></li><li>Categories:
+<em><a href=https://simbabque.github.io/categories/coding>coding</a></em></li><li>7 minute read</li></ul></aside><div class=featured_image><a href=https://simbabque.github.io/posts/github-workflow-guide-for-modules/ title="A Github Workflow guide for CPAN modules"><img src></a></div><p>In my <a href=posts/install-perl-version-depedencies-github-workflow/>previous post on special dependencies</a>
+I have already talked about <a href=https://github.com/features/actions>Github Actions</a>. This is a recap on the tooling
+I mentioned in this talk, with a short guide on how to use it.</p><h1 id=introduction>Introduction</h1><p>Before you start, you should have a quick look at <a href=https://docs.github.com/en/actions>the official documentation</a>
+for Github Actions. The <a href=https://docs.github.com/en/actions/quickstart>quickstart guide</a> offers a good overview. Fundamentally,
+actions give you <a href=https://en.wikipedia.org/wiki/Continuous_integration>Continuous integration</a> for free.
+That means you can have your module&rsquo;s unit tests run for you on various different versions of Perl, on Linux, MacOS and Windows,
+whenever you push a commit or someone opens a pull request. This is very useful to make sure contributions don&rsquo;t break your code,
+or to enforce certain coding guidelines such as requiring code to follow a specific <a href=https://metacpan.org/dist/Perl-Tidy/view/bin/perltidy#Using-a-.perltidyrc-command-file>perltidyrc</a>.</p><p>A <a href=https://docs.github.com/en/actions/using-workflows/about-workflows><em>workflow</em></a> is defined in a <em>workflow file</em>, which is a YAML file in your <code>.github/workflows</code> directory. You can have several of these, they just have to have unique names.
+A workflow contains one or more <a href=https://docs.github.com/en/actions/using-jobs/using-jobs-in-a-workflow><em>jobs</em></a>. Each job gets run by a runner, and will be executed within its own container. Jobs can depend on other jobs, so you can do something like this:</p><div class=mermaid align=center>flowchart LR
+A[Build the module] --> B[Test the module]</div><p>Jobs can be defined one at a time, or in <a href=https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs>a <em>matrix</em></a>. This is a bit like a loop. You can define lists of variables, such as the operating system and the Perl version,
+and it will spawn variations of the job for each combination.</p><div class=mermaid align=center>flowchart LR
+A[Build] --> B1[Test on Linux with Perl 5.8]
+A --> B2[Test on Linux with Perl 5.36]
+A --> B3[Test on Windows with Perl 5.8]
+A --> B4[Test on Windows with Perl 5.36]</div><p>A job consists of several steps, which are called <em>actions</em>. This is where the real work happens. Github provides some of these out of the box, such as <a href=https://github.com/marketplace/actions/checkout>checking out code from your repository</a>, <a href=https://github.com/marketplace/actions/upload-a-build-artifact>storing</a> and <a href=https://github.com/marketplace/actions/download-a-build-artifact>retrieving</a> a build artefact, or running shell commands. It is also possible to add tags or comments to PRs, or to close them automatically.</p><h1 id=using-perl-specific-workflow-tools>Using Perl-specific workflow tools</h1><p>There are various tools specificly for Perl that people in the community have built. These are actively maintained and are meant to make your life easier.</p><p>Let&rsquo;s start with a complex example. We&rsquo;ll break it down afterwards. This is <a href=https://github.com/libwww-perl/URI/blob/4a7a7294eb9b9b2416b3dd491227e4a8dcb45e1a/.github/workflows/dzil-build-and-test.yml>the current workflow for the URI module</a>. Here it is in full. I will run through the whole thing step by step below.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nn>---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>dzil build and test</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>push</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>branches</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;*&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>pull_request</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>branches</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;*&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>schedule</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>cron</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;15 4 * * 0&#34;</span><span class=w> </span><span class=c># Every Sunday morning</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>workflow_dispatch</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>jobs</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>build-job</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Build distribution</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>runs-on</span><span class=p>:</span><span class=w> </span><span class=l>ubuntu-20.04</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>perldocker/perl-tester:5.34</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>steps</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/checkout@v3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Run Tests</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>env</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>AUTHOR_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>AUTOMATED_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>EXTENDED_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>RELEASE_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>auto-build-and-test-dist</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/upload-artifact@v3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>build_dir</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>build_dir</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>if</span><span class=p>:</span><span class=w> </span><span class=l>${{ github.actor != &#39;nektos/act&#39; }}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>coverage-job</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>needs</span><span class=p>:</span><span class=w> </span><span class=l>build-job</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>runs-on</span><span class=p>:</span><span class=w> </span><span class=l>ubuntu-20.04</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>perldocker/perl-tester:5.34</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>steps</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/checkout@v3</span><span class=w> </span><span class=c># codecov wants to be inside a Git repository</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/download-artifact@v3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>build_dir</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Install deps and test</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>cpan-install-dist-deps &amp;&amp; test-dist</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>env</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>CODECOV_TOKEN</span><span class=p>:</span><span class=w> </span><span class=l>${{secrets.CODECOV_TOKEN}}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>test-job</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>needs</span><span class=p>:</span><span class=w> </span><span class=l>build-job</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>strategy</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>fail-fast</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>matrix</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>os</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>ubuntu-latest, macos-latest, windows-latest]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>distribution</span><span class=p>:</span><span class=w> </span><span class=p>[</span><span class=l>default, strawberry]</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>perl-version</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.8&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.10&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.12&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.14&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.16&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.18&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.20&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.22&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.24&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.26&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.28&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.30&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.32&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.34&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- <span class=s2>&#34;5.36&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>exclude</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- {<span class=w> </span><span class=nt>os: windows-latest, distribution</span><span class=p>:</span><span class=w> </span><span class=l>default }</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- {<span class=w> </span><span class=nt>os: macos-latest,   distribution</span><span class=p>:</span><span class=w> </span><span class=l>strawberry }</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- {<span class=w> </span><span class=nt>os: ubuntu-latest,  distribution</span><span class=p>:</span><span class=w> </span><span class=l>strawberry }</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- {<span class=w> </span><span class=nt>distribution: strawberry, perl-version</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;5.8&#34;</span><span class=w> </span>}<span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- {<span class=w> </span><span class=nt>distribution: strawberry, perl-version</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;5.10&#34;</span><span class=w> </span>}<span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- {<span class=w> </span><span class=nt>distribution: strawberry, perl-version</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;5.12&#34;</span><span class=w> </span>}<span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- {<span class=w> </span><span class=nt>distribution: strawberry, perl-version</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;5.34&#34;</span><span class=w> </span>}<span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span>- {<span class=w> </span><span class=nt>distribution: strawberry, perl-version</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;5.36&#34;</span><span class=w> </span>}<span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>runs-on</span><span class=p>:</span><span class=w> </span><span class=l>${{ matrix.os }}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>name</span><span class=p>:</span><span class=w>  </span><span class=kc>on</span><span class=w> </span><span class=l>${{ matrix.os }} perl ${{ matrix.perl-version }}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>steps</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>set up perl</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>shogo82148/actions-setup-perl@v1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>perl-version</span><span class=p>:</span><span class=w> </span><span class=l>${{ matrix.perl-version }}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>distribution</span><span class=p>:</span><span class=w> </span><span class=l>${{ matrix.distribution }}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/download-artifact@v3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>build_dir</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>install deps using cpm</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>perl-actions/install-with-cpm@v1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>cpanfile</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;cpanfile&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>args</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;--with-suggests --with-recommends --with-test&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>prove -lr t</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>env</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>AUTHOR_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>0</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>RELEASE_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>0</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>You can see the output of this workflow <a href=https://github.com/libwww-perl/URI/actions/runs/3255037218>here</a> (if the output has been removed after some time, you can pick another one <a href=https://github.com/libwww-perl/URI/actions>in the actions tab on github</a>). The diagram for this looks a bit like the following (simplified).</p><div class=mermaid align=center>flowchart LR
+A[Build] --> Coverage
+subgraph Test
+direction LR
+t1[on ubuntu-latest perl 5.8]
+t2[on ubuntu-latest perl 5.10]
+t3[...]
+t4[on ubuntu-latest perl 5.36]
+t5[on macos-latest perl 5.10]
+t6[...]
+t7[on macos-latest perl 5.36]
+t8[on windows-latest perl 5.14]
+t9[...]
+t10[on windows-latest perl 5.32]
+end
+A --> Test</div><p>Let&rsquo;s run through step by step.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>dzil build and test</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>You have to set the name of your workflow. If you have several, this is how you distinguish them. One reason to have more than one workflow would be to build documentation that gets stored into a different branch to be hosted <a href=https://pages.github.com/>on github pages</a>, much like <a href=https://github.com/simbabque/simbabque.github.io/blob/master/.github/workflows/gh-pages.yml>the (only) workflow for this blog</a>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>push</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>branches</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;*&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>pull_request</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>branches</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=s2>&#34;*&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>schedule</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span>- <span class=nt>cron</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;15 4 * * 0&#34;</span><span class=w> </span><span class=c># Every Sunday morning</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>workflow_dispatch</span><span class=p>:</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>The <code>on</code> key controls when a workflow gets triggered. The options we&rsquo;ve used here mean:</p><ul><li>run every time someone pushes to any branch in the repository (this is code you or your colaborators write),</li><li>someone opens a pull request (also when they push or force push more code to their PR&rsquo;s branch),</li><li>automatically as a cronjob,</li><li>or with <code>workflow_dispatch</code> when you click the button to run it against a branch of your choosing.</li></ul><p>The <code>schedule</code> makes sense if you want to rebuild something automatically, such as documentation, a blog or a static site, or if your tests rely on external websites that might go away. In most cases you probably do not want to use it. Dave Cross&rsquo; website <a href=https://perl.theplanetarium.org/>Planet Perl</a> heavily uses this feature to aggregate Perl blog posts from around the web several times a day.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>jobs</span><span class=p>:</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>Next we have the <code>jobs</code>. This workflow defines three different ones, as shown above in the diagram. The first one is for building the distribution. This is not so much about running the tests, but about building the module once, so that it can be used in subsequent tests on different platforms. That way we can save time on complicated build processes.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>jobs</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>build-job</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Build distribution</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>runs-on</span><span class=p>:</span><span class=w> </span><span class=l>ubuntu-20.04</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>container</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>perldocker/perl-tester:5.34</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>steps</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/checkout@v3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Run Tests</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>env</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>AUTHOR_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>AUTOMATED_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>EXTENDED_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>RELEASE_TESTING</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>auto-build-and-test-dist</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/upload-artifact@v3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>build_dir</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>build_dir</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>if</span><span class=p>:</span><span class=w> </span><span class=l>${{ github.actor != &#39;nektos/act&#39; }}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>The build job in our example runs on a specific Ubuntu version, on a custom Docker container that is maintained by the Perl 5 Porters named <a href=https://github.com/Perl/docker-perl-tester>perldocker</a>. It runs a specific Perl version that you chose in the <code>image</code> (this one uses 5.34), as well as the OS you set in the <code>runs-on</code> key. The container comes with a lot of different testing modules, CPAN clients such as <a href=https://metacpan.org/dist/App-cpanminus/view/lib/App/cpanminus/fatscript.pm>cpanm</a> and <a href=https://metacpan.org/dist/App-cpm/view/script/cpm>cpm</a> as well as spelling dictionaries and other useful stuff. This allows you to run most Perl related builds and tests pretty much out of the box, and cuts down on run time for individual jobs.</p><p>next: checkout</p></article><section class=post-nav><ul><li><a href=https://simbabque.github.io/posts/install-perl-version-depedencies-github-workflow/><i class="fa fa-chevron-circle-left"></i> Installing Perl dependencies based on your Perl version in Github Actions</a></li><li></li></ul></section></main><footer><ul><li><h6>Rendered by <a href=https://gohugo.io title=Hugo>Hugo</a> |
+<a href=https://simbabque.github.io/index.xml>Subscribe</a></h6></li></ul></footer></div><script src=https://simbabque.github.io/js/scripts.js></script>
+<script src=https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js></script>
+<script>mermaid.initialize({startOnLoad:!0})</script></body></html>
