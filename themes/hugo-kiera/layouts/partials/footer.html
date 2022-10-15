@@ -21,6 +21,12 @@
 {{ if .Site.GoogleAnalytics }}
   {{ template "_internal/google_analytics.html" . }}
 {{ end }}
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    const darkTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    mermaid.initialize({ startOnLoad: true, theme: darkTheme ? 'dark' : 'default' });
+</script>
+
 {{ partial "user_footer" . }}
 </body>
 
