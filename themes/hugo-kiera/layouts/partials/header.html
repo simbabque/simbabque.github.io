@@ -14,6 +14,7 @@
       {{ partial "css/syntax-light.css" . | safeCSS }}
     }
     </style>
+  {{ if hugo.IsProduction -}}
     <script>
       window.goatcounter = {
           path: function(p) { return location.host + p }
@@ -21,6 +22,7 @@
    </script>
    <script data-goatcounter="https://simbabque-github-io.goatcounter.com/count"
            async src="//gc.zgo.at/count.js"></script>
+  {{ end -}}
 </head>
 
 <body>
