@@ -10,11 +10,11 @@ I recently got an account for [Github Copilot](https://copilot.github.com/). So 
 
 I have used it to write my entries for the [Weekly Challenge 166](https://theweeklychallenge.org/blog/perl-weekly-challenge-166/). I am going to look at task 2 in this blog post. In a gist, you're asked to print a table diff view of files in three directories. It turns out that properly describing the task is actually quite hard.
 
-I'm doing this in [Visual Studio Code](https://code.visualstudio.com/), with the Copilot extension. It prettty much just suggests code and you can accept it, or ask for something else.
+I'm doing this in [Visual Studio Code](https://code.visualstudio.com/), with the Copilot extension. It pretty much just suggests code and you can accept it, or ask for something else.
 
 ![Hello World in Perl](hello-world.gif)
 
-Obviously the first thing I tried was to dump in the whole task description and hope for the best. Of course that did not work. 
+Obviously the first thing I tried was to dump in the whole task description and hope for the best. Of course that did not work.
 
 Let's talk about assumptions for a second. I didn't think getting the actual task done with Copilot would work. I did not even think it would produce sensible Perl code at all.
 
@@ -35,11 +35,11 @@ This is cute, but not exactly what we need. Instead, I tried to be more explicit
 
 ```perl
 # iterate over these files and directories:
-# Arial.ttf  Comic_Sans.ttf  Georgia.ttf  
+# Arial.ttf  Comic_Sans.ttf  Georgia.ttf
 # Helvetica.ttf  Impact.otf  Verdana.ttf  Old_Fonts/
 # create them in the temporary directory
 for my $file (qw(
-    Arial.ttf Comic_Sans.ttf Georgia.ttf 
+    Arial.ttf Comic_Sans.ttf Georgia.ttf
     Helvetica.ttf Impact.otf Verdana.ttf
 )) {
     $dir_a->child($file)->touchpath;
@@ -53,7 +53,7 @@ Now all we need to do is repeat this two more times. This is now much easier. It
 
 ![Creating directory b is much faster](create-files-b.gif)
 
-To make `dir_c` we do the same thing, and it just appears. 
+To make `dir_c` we do the same thing, and it just appears.
 
 Finally, we don't want to keep these directories around after we're done. So we need to delete them. Let's ask Copilot to do that for us.
 
@@ -62,14 +62,14 @@ Finally, we don't want to keep these directories around after we're done. So we 
 Find the missing files
 ---
 
-This seemed easy. Too easy. Surely it cannot just write the code for us, can it? Let's find out. We're going to give it the brief from the challenge. 
+This seemed easy. Too easy. Surely it cannot just write the code for us, can it? Let's find out. We're going to give it the brief from the challenge.
 
 As a reminder, I'm recreating this for the blog post. I don't know if Copilot remembers my first attempt. I'm doing this in a different directory, different git repository and different VS Code window. The code it produces is not what I got before.
 
 ```perl
-# Given a few (three or more) directories (non-recursively), 
-# display a side-by-side difference of files that are 
-# missing from at least one of the directories. Do not 
+# Given a few (three or more) directories (non-recursively),
+# display a side-by-side difference of files that are
+# missing from at least one of the directories. Do not
 # display files that exist in every directory.
 ```
 
@@ -105,8 +105,8 @@ There seem to be several options to make Copilot do what you mean. Their example
 ```perl
 =head2 find_missing_files(@dirs)
 
-Takes a list of L<Path::Tiny> objects and returns a hashref 
-of directories with a list of filenames that do not exist 
+Takes a list of L<Path::Tiny> objects and returns a hashref
+of directories with a list of filenames that do not exist
 in all directories each.
 
     my $missing_files = find_missing_files(@dirs);
@@ -166,7 +166,7 @@ sub find_missing_files {
 
     # iterate directories
     # iterate files in each directory sorted by their filename
-    # if the filename does not exists in all directories, add the 
+    # if the filename does not exists in all directories, add the
     # filename to the hash of files for this directory
 
 }
@@ -210,7 +210,7 @@ sub find_missing_files {
 
     # iterate directories
     # iterate files in each directory sorted by their filename
-    # if the filename does not exists in all directories, add the 
+    # if the filename does not exists in all directories, add the
     # filename to the hash of files for this directory
 
     for my $dir (@dirs) {
@@ -257,7 +257,7 @@ Maybe we need to tell it we're wrinting a function instead.
 This is... interesting. It has assumed we can pass in `$missing_files` to the new function. When I add a `print make_table(` it also auto completes the variable name into the function call. Neat. However it errors, because it has remembered that we've got Path::Tiny, but not in that data structure. So there is no `basename` on that `$dir`, and it blows up.
 
 ```
-Can't locate object method "basename" via package "dir_a" 
+Can't locate object method "basename" via package "dir_a"
 (perhaps you forgot to load "dir_a"?) at test.pl line 109.
 ```
 
@@ -295,20 +295,20 @@ I've written the following POD for the function. As you can see, this contains t
 ```perl
 =head2 make_table($missing_files_by_dir)
 
-Takes a hashref of dirs, each containing a list of missing 
+Takes a hashref of dirs, each containing a list of missing
 files and returns a L<Text::Table::Tiny> object.
 
     my $table = make_table($missing_files_by_dir);
 
 The input data looks like this:
-     
+
     $missing_files = {
          dir_a => [qw(Comic_Sans.ttf Georgia.ttf Old_Fonts/)],
          dir_b => [qw(Comic_Sans.ttf Courier_New.ttf Tahoma.ttf)],
          dir_c => [qw(Courier_New.ttf Monaco.ttf)],
     }
 
-The table has one column per directory, and one row per file. The rows are 
+The table has one column per directory, and one row per file. The rows are
 sorted by filename. If a file is missing from a directory, the cell is empty.
 
     dir_a          | dir_b           | dir_c
@@ -383,7 +383,7 @@ This is shiny. It's come up with the `uniq` and loaded [List::Util](https://meta
 ]
 ```
 
-This is correct-ish. We're missing the folder `Old_Fonts`. I actually didn't notice this earlier. Scroll up, and you will see that the code for `find_missing_files` that we accepted filters `.ttf` files out of the children. I'm going to remove that bit now. My original code did not have the filter. I suspect it is because I asked explicitly for _files_. 
+This is correct-ish. We're missing the folder `Old_Fonts`. I actually didn't notice this earlier. Scroll up, and you will see that the code for `find_missing_files` that we accepted filters `.ttf` files out of the children. I'm going to remove that bit now. My original code did not have the filter. I suspect it is because I asked explicitly for _files_.
 
 The next thing we need to do is get the directories. We want one row per file, and one column per directory. It seems to be intent on using an explicit `sort { $a cmp $b }` even though it doesn't need that. I tried alternatives, but there were none. Ok, fine.
 
