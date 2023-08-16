@@ -26,7 +26,7 @@ In English
 
 * [Perl Weekly Challenge Lightning Talk](https://www.youtube.com/watch?v=GEaw9sWC2yk) &ndash; A quick intro to the [Perl Weekly Challenge](https://theweeklychallenge.org/). Recorded on my phone at Barcelona Perl and friends 2019.
 
-In German 
+In German
 ---
 
 * [MooseX::App::Cmd und DBIx::Class gegen das Büro-Radio?](https://www.youtube.com/watch?v=7PbxlcQQPmQ) &ndash; … or figuring out if the Radio really only has 20 songs. Recorded at the [German Perl/Raku Workshop 2020](https://act.yapc.eu/gpw2020/talk/7709).
@@ -44,6 +44,8 @@ In English
 * [Finding humans to turn into developers](https://www.youtube.com/watch?v=b33MDXyl3Mw&t=6150s) &ndash; I explain how to hire the right junior developers or trainees. I explore what qualities and soft skills to look for and how to figure out if someone really wants to be a developer. The methods I talk about have been used successfully in Germany as well as the UK. Recorded at the [Swiss Perl Workshop 2018](http://act.perl-workshop.ch/spw2018/talk/7518).
 
 * [Progressing from humans to developers](https://www.youtube.com/watch?v=zq6g2OPXlx0) &ndash; Based on my previous talks (above), this details how software developer training might be structured using a progression framework. Recorded at [the German Perl/Raku Workshop 2020](https://act.yapc.eu/gpw2020/talk/7708).
+
+* (no recording yet) Turning humans into developers in a post Covid world &ndash; A full circle approach to hiring, training and progressing junior developers, this talk is a one hour walk-through containing parts of my three previous topics, adjusted to the new reality of mostly working from home. Recorded at [YAPC::Europe & KohaCon'23 in Helsinki](https://perlkohacon.fi/Schedule.html#Wednesday?talk_id=47). [Slides](talk-yapc-koha-2023-turning-humans-into-developers-post-covid.pdf).
 
 In German
 ---
