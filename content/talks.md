@@ -26,6 +26,10 @@ In English
 
 * [Perl Weekly Challenge Lightning Talk](https://www.youtube.com/watch?v=GEaw9sWC2yk) &ndash; A quick intro to the [Perl Weekly Challenge](https://theweeklychallenge.org/). Recorded on my phone at Barcelona Perl and friends 2019.
 
+* [Github Workflows for CPAN modules](https://www.youtube.com/watch?v=1d-IXMziw_k) &ndash; An introduction to Github Actions, how to use them for CPAN modules and what their eco system has to offer for Perl. Recorded at the [German Perl/Raku Workshop 2023](https://act.yapc.eu/gpw2023/talk/7837).
+
+* [A DBIC::Debacle](https://www.youtube.com/watch?v=Zum9kcKy578) &ndash; DBIx::Class relationships are complicated if you run a slighly unconventional database schema. I explain how this turns into a foot gun at `$work` sometimes, and how to do it properly anyway. [Recorded at the German Perl/Raku Workshop 2023](https://act.yapc.eu/gpw2023/talk/7836).
+
 In German
 ---
 
@@ -45,7 +49,7 @@ In English
 
 * [Progressing from humans to developers](https://www.youtube.com/watch?v=zq6g2OPXlx0) &ndash; Based on my previous talks (above), this details how software developer training might be structured using a progression framework. Recorded at [the German Perl/Raku Workshop 2020](https://act.yapc.eu/gpw2020/talk/7708).
 
-* (no recording yet) Turning humans into developers in a post Covid world &ndash; A full circle approach to hiring, training and progressing junior developers, this talk is a one hour walk-through containing parts of my three previous topics, adjusted to the new reality of mostly working from home. Recorded at [YAPC::Europe & KohaCon'23 in Helsinki](https://perlkohacon.fi/Schedule.html#Wednesday?talk_id=47). [Slides](talk-yapc-koha-2023-turning-humans-into-developers-post-covid.pdf).
+* [Turning humans into developers in a post Covid world](https://www.youtube.com/watch?v=PC5uKgsyKkc) &ndash; A full circle approach to hiring, training and progressing junior developers, this talk is a one hour walk-through containing parts of my three previous topics, adjusted to the new reality of mostly working from home. Recorded at [YAPC::Europe & KohaCon'23 in Helsinki](https://perlkohacon.fi/Schedule.html#Wednesday?talk_id=47). [Slides](talk-yapc-koha-2023-turning-humans-into-developers-post-covid.pdf).
 
 In German
 ---
