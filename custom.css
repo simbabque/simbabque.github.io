@@ -9,3 +9,13 @@
 ul#social-media a {
     text-decoration: none;
 }
+
+/* SVG-Icons */
+.bi {
+  display: inline-block;
+}
+.bi-link {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: var(--wk-accent-color-3);
+}
