@@ -51,7 +51,7 @@ In English
 
 * [Turning humans into developers in a post Covid world](https://www.youtube.com/watch?v=PC5uKgsyKkc) &ndash; A full circle approach to hiring, training and progressing junior developers, this talk is a one hour walk-through containing parts of my three previous topics, adjusted to the new reality of mostly working from home. Recorded at [YAPC::Europe & KohaCon'23 in Helsinki](https://perlkohacon.fi/Schedule.html#Wednesday?talk_id=47), and again at [The Perl and Raku Conference 2024 in Las Vegas](https://youtu.be/5rtsEbcBK1s). [Slides from Helsinki](talk-yapc-koha-2023-turning-humans-into-developers-post-covid.pdf) [Slides from Las Vegas](talk-tprc-2024-turning-humans-into-developers-post-covid.pdf).
 
-* Making humans want to be developers &ndash; An explanation of why work experiences and internships are a good idea for companies and for students, and how to set them up and make them useful from a company perspective. Recorded at [the German Perl/Raku Workshop 2024](https://act.yapc.eu/gpw2024/talk/7860). [Slides](talk-gpw-2024-making-humans-want-to-be-developers.pdf).
+* [Making humans want to be developers](https://www.youtube.com/watch?v=dvk_F0Tna2A) &ndash; An explanation of why work experiences and internships are a good idea for companies and for students, and how to set them up and make them useful from a company perspective. Recorded at [the German Perl/Raku Workshop 2024](https://act.yapc.eu/gpw2024/talk/7860). [Slides](talk-gpw-2024-making-humans-want-to-be-developers.pdf).
 
 In German
 ---
