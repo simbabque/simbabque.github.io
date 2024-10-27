@@ -4,7 +4,8 @@ title = "Julien's tech(ish) blog"
 theme = "hugo-kiera"
 canonifyurls = true
 
-paginate = 3
+[pagination]
+pagerSize = 3
 
 summaryLength = 30
 enableEmoji = true
@@ -48,7 +49,7 @@ pygmentsCodeFences = true
     url = "/categories"
     weight = 1
 
-[author]
+[params.author]
     name = "Julien Fiegehenn"
     github = "simbabque"
     #gitlab = "username"
