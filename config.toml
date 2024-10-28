@@ -36,11 +36,11 @@ pygmentsCodeFences = true
     #disableDarkModeCSS = false # disables css style for users using dark-mode
 
 # uncomment to enable the Tags link on the main toolbar
-[[menu.main]]
-    identifier = "tags"
-    name = "Tags"
-    url = "/tags"
-    weight = 1
+#[[menu.main]]
+#    identifier = "tags"
+#    name = "Tags"
+#    url = "/tags"
+#    weight = 1
 
 # uncomment to enable the Categories link on the main toolbar
 [[menu.main]]
@@ -53,7 +53,7 @@ pygmentsCodeFences = true
     name = "Julien Fiegehenn"
     github = "simbabque"
     #gitlab = "username"
-    #linkedin = "username"
+    linkedin = "julienfiegehenn"
     #facebook = "username"
     twitter = "simbabque"
     #instagram = "username"
